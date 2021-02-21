@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSpring, animated as a } from 'react-spring';
 
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from './Scene';
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../game/constants';
 import { PLANETS } from '../game/missions';
 
 const START_RADIUS = 100;

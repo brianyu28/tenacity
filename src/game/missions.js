@@ -1,5 +1,7 @@
 // Game is divided into Planets and Missions
 
+import { BLOCKS } from './blocks';
+
 export const PLANETS = [
   {
     name: 'Mercury',
@@ -11,11 +13,16 @@ export const PLANETS = [
     },
     colors: {
       main: '#ae7c43',
-      sky: '#dbb78f'
+      sky: '#dbb78f',
+      text: 'black'
     },
+    briefing: 'The Tenacity rover has arrived on Mercury. Use the control panel to help Tenacity complete its missions.',
     missions: [
       {
-        objective: 'Mission 1 Objective'
+        objective: 'Navigate Tenacity back to the spacecraft for refueling.',
+        blocks: [
+          [BLOCKS.FORWARD, 1]
+        ]
       },
       {
         objective: 'Mission 2 Objective'
