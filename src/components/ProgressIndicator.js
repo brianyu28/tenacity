@@ -13,7 +13,7 @@ export default ({ planet, completedMissions }) => {
         y={PADDING}
         style={{ fill: planet.colors.text, fontSize: '24px' }}
       >
-        {planet.name} {completedMissions + 1}
+        {planet.name}
       </text>
 
       {planet.missions.map((mission, i) => {

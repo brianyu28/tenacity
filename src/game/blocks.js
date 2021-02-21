@@ -3,7 +3,7 @@
 export const BLOCKS = {
 
   FORWARD: {
-    name: 'Move Forwards'
+    name: 'Move Forward'
   }
 
 }
