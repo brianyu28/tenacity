@@ -1,17 +1,26 @@
 import React, { useReducer } from 'react';
+import { useSpring, animated as a } from 'react-spring';
 
 import GameIntro from './GameIntro';
+import PlanetIntro from './PlanetIntro';
+import Level from './Level';
 
-const CANVAS_WIDTH = 800;
-const CANVAS_HEIGHT = 600;
+import { PLANETS } from '../game/missions';
+
+export const CANVAS_WIDTH = 800;
+export const CANVAS_HEIGHT = 600;
 
 const ACTION = {
-  COMPLETE_INTRO: 'COMPLETE_INTRO'
+  COMPLETE_INTRO: 'COMPLETE_INTRO',
+  COMPLETE_PLANET_INTRO: 'COMPLETE_PLANET_INTRO'
 }
 
 const HANDLER = {
   [ACTION.COMPLETE_INTRO]: state => {
     return {...state, introShown: true};
+  },
+  [ACTION.COMPLETE_PLANET_INTRO]: state => {
+    return {...state, planetIntroShown: true}
   }
 }
 
@@ -25,43 +34,75 @@ const getInitialState = () => {
   return {
 
     // Track current mission for user
-    planet: 0,
-    mission: 0,
+    planetIndex: 0,
+    missionIndex: 0,
 
     // Track current status of game
     introShown: false,
+    planetIntroShown: false,
 
   }
 }
 
-export default () => {
+export default (props) => {
+
+  const { onStartPlaying } = props;
 
   const [state, dispatch] = useReducer(reducer, getInitialState());
   const act = (type, payload) => dispatch({ type, payload });
 
   const {
-    planet,
-    mission,
-    introShown
+    planetIndex,
+    missionIndex,
+    introShown,
+    planetIntroShown,
   } = state;
 
+  // Handle entering and exiting introduction screens
   function handleCompleteIntro() {
     act(ACTION.COMPLETE_INTRO);
   }
 
+  function handleCompletePlanetIntro() {
+    act(ACTION.COMPLETE_PLANET_INTRO);
+  }
+
   function showIntro() {
     return <GameIntro
+      onStartPlaying={onStartPlaying}
       onCompleteIntro={handleCompleteIntro}
     />;
   }
 
-  function showLevel() {
-    return <text x='50%' y='50%' fill='white'>level</text>
+  function showPlanetIntro() {
+    return <PlanetIntro
+      planetIndex={planetIndex}
+      onCompleteIntro={handleCompletePlanetIntro}
+    />
   }
 
+  function showLevel() {
+    return <Level
+      planetIndex={planetIndex}
+      missionIndex={missionIndex}
+    />
+  }
+
+  const backgroundColorSpring = useSpring({
+    to: {color: introShown ? (planetIntroShown ? PLANETS[planetIndex].colors.sky : 'black') : 'rgba(0, 0, 0, 0)'},
+    from: {color: 'rgba(0, 0, 0, 0)'},
+    config: {duration: 1500}
+  });
+
   return (
-    <svg width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className='scene'>
-        {!introShown ? showIntro() : showLevel()}
-    </svg>
+    <div>
+      <a.svg width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className='scene'
+           style={{ backgroundColor: backgroundColorSpring.color }}
+      >
+          {!introShown ? showIntro() :
+           !planetIntroShown ? showPlanetIntro() :
+           showLevel()}
+      </a.svg>
+    </div>
   );
 };
