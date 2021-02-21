@@ -22,11 +22,11 @@ export const PLANETS = [
       {
         objective: 'Navigate Tenacity back to the spacecraft for refueling.',
         blocks: [
-          [BLOCK_NAMES.FORWARD, 1]
+          [BLOCK_NAMES.FORWARD, 2]
         ],
         items: {
           'rocket': {object: OBJECTS.ROCKET, x: 500},
-          'rover': {object: OBJECTS.ROVER, x: 400},
+          'rover': {object: OBJECTS.ROVER, x: 300},
         },
         criteria: [
           {category: 'rover_x', value: 500}

@@ -28,6 +28,7 @@ const ACTION = {
   ADD_TO_PROGRAM: 'ADD_TO_PROGRAM',
   RESET_PROGRAM: 'RESET_PROGRAM',
   SUBMIT_PROGRAM: 'SUBMIT_PROGRAM',
+  SET_INST_PTR: 'SET_INST_PTR',
 }
 
 const HANDLER = {
@@ -59,6 +60,9 @@ const HANDLER = {
   },
   [ACTION.SUBMIT_PROGRAM]: state => {
     return {...state, programSubmitted: true}
+  },
+  [ACTION.SET_INST_PTR]: (state, instruction) => {
+    return {...state, currentInstruction: instruction}
   }
 };
 
@@ -139,6 +143,10 @@ export default (props) => {
     act(ACTION.ADD_TO_PROGRAM, block);
   }
 
+  function setCurrentInstruction(i) {
+    act(ACTION.SET_INST_PTR, i);
+  }
+
   function showIntro() {
     return <GameIntro
       onStartPlaying={onStartPlaying}
@@ -159,6 +167,7 @@ export default (props) => {
       currentInstruction={currentInstruction}
       planetIndex={planetIndex}
       missionIndex={missionIndex}
+      setCurrentInstruction={setCurrentInstruction}
       program={program}
       programSubmitted={programSubmitted}
     />

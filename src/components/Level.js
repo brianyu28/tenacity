@@ -7,8 +7,10 @@ import { BLOCK_NAMES } from '../game/blocks';
 import { PLANETS } from '../game/missions';
 import {  obj_y } from '../game/objects';
 
+const AItem = a(Item);
+
 export default ({ currentInstruction, planetIndex, missionIndex,
-                  program, programSubmitted }) => {
+                  setCurrentInstruction, program, programSubmitted }) => {
 
   const planet = PLANETS[planetIndex];
   const mission = planet.missions[missionIndex];
@@ -31,7 +33,10 @@ export default ({ currentInstruction, planetIndex, missionIndex,
             ...items,
             rover: {
               ...rover,
-              x: rover.x + 100
+              x: rover.x + 100,
+              prev: {
+                x: rover.x + 100
+              }
             }
           }
         });
@@ -48,12 +53,28 @@ export default ({ currentInstruction, planetIndex, missionIndex,
 
         const item = items[itemName];
 
+        const itemSpring = useSpring({
+          to: {x: item.x, elevation: item.elevation || 0},
+          from: {
+            x: (item.prev && item.prev.x) ? item.prev.x : item.x,
+            elevation: (item.prev && item.prev.elevation) ? item.prev.elevation : item.elevation || 0
+          },
+          config: {duration: 1000},
+          onRest: () => {
+            if (itemName === 'rover' && programSubmitted && instructionsCompleted > currentInstruction) {
+              setTimeout(() => {
+                setCurrentInstruction(currentInstruction + 1);
+              }, 250);
+            }
+          }
+        });
+
         // Non-agent doesn't need to move
-        return <Item
+        return <AItem
           key={i}
           object={item.object}
-          x={item.x}
-          y={obj_y(item.object, item.elevation || 0)}
+          x={itemSpring.x}
+          y={itemSpring.elevation.interpolate(e => obj_y(item.object, e))}
         /> 
       })}
     </g>
