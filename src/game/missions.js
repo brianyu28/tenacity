@@ -6,7 +6,8 @@ export const PLANETS = [
     introConfig: {
       size: 15,
       scale: 2,
-      orbitDuration: 10000
+      orbitDuration: 10000,
+      textColor: 'black'
     },
     colors: {
       main: '#ae7c43',

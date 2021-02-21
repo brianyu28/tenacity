@@ -7,14 +7,17 @@ import { PLANETS } from '../game/missions';
 const START_RADIUS = 100;
 const RADIUS_INCREMENT = 20;
 
-export default ({ onCompleteIntro, planetIndex }) => {
+export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
 
   // Determine current planet and scale
   const planet = PLANETS[planetIndex];
   const scale = planet.introConfig.scale;
 
+  // State to keep track of stage in animation
   const [resetOrbit, setResetOrbit] = useState(false);
   const [exitIntro, setExitIntro] = useState(false);
+  const [planetZoom, setPlanetZoom] = useState(false);
+  const [planetText, setPlanetText] = useState(false);
 
   // Fade in for sun
   const sunSpring = useSpring({
@@ -47,15 +50,46 @@ export default ({ onCompleteIntro, planetIndex }) => {
     from: {opacity: 1},
     config: {duration: 2000},
     onRest: () => {
-      if (exitIntro)
+      if (exitIntro) {
         onCompleteIntro();
+      }
+    }
+  });
+
+  // Fade in for planet text
+  const planetTextSpring = useSpring({
+    to: {opacity: planetText ? 1: 0},
+    from: {opacity: 0},
+    config: {duration: 1000},
+    onRest: () => {
+      if (planetText) {
+        setTimeout(() => {
+          setExitIntro(true);
+        }, 2000);
+      }
     }
   })
 
   // Generate orbit and planet for each visible planet
   const renderedPlanets = PLANETS.slice(0, 1 + planetIndex).map((planet, i) => {
 
-    const startAngle = Math.random() * 2 * Math.PI;
+    const isLastPlanet = i == planetIndex;
+
+    let planetGrowthSpring = undefined;
+    if (isLastPlanet) {
+      planetGrowthSpring = useSpring({
+        to: {r: planetZoom ? 1600 : planet.introConfig.size * scale},
+        from: {r: planet.introConfig.size * scale},
+        config: {duration: 1000},
+        onRest: () => {
+          if (planetZoom) {
+            onZoomIntro();
+            setPlanetText(true);
+          }
+        }
+      });
+    }
+
     const radius = START_RADIUS + RADIUS_INCREMENT * i;
     return <a.g key={i} opacity={planetOpacitySpring.opacity}>
       <a.circle
@@ -69,7 +103,7 @@ export default ({ onCompleteIntro, planetIndex }) => {
       <a.circle
         cx={planetMotionSpring.angle.interpolate(theta => (CANVAS_WIDTH / 2) + scale * (radius * Math.cos(theta)))}
         cy={planetMotionSpring.angle.interpolate(theta => (CANVAS_HEIGHT / 2) - scale * (radius * Math.sin(theta)))}
-        r={planet.introConfig.size * scale}
+        r={isLastPlanet ? planetGrowthSpring.r : planet.introConfig.size * scale}
         style={{ fill: planet.colors.main }}
       /> 
     </a.g>;
@@ -78,8 +112,8 @@ export default ({ onCompleteIntro, planetIndex }) => {
   // Fade out intro screen
   useEffect(() => {
     const timer = setTimeout(() => {
-      setExitIntro(true);
-    }, 9000);
+      setPlanetZoom(true);
+    }, 10000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -97,6 +131,17 @@ export default ({ onCompleteIntro, planetIndex }) => {
 
       {/* Other Planets */}
       {renderedPlanets}
+
+      <a.text
+        x='50%'
+        y='50%'
+        dominantBaseline='middle'
+        textAnchor='middle'
+        style={{ fontSize: '80px', fill: planet.introConfig.textColor }}
+        opacity={planetTextSpring.opacity}
+      >
+        {planet.name}
+      </a.text>
     </a.g>
   );
 }

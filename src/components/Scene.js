@@ -12,17 +12,32 @@ export const CANVAS_HEIGHT = 600;
 
 const ACTION = {
   COMPLETE_INTRO: 'COMPLETE_INTRO',
-  COMPLETE_PLANET_INTRO: 'COMPLETE_PLANET_INTRO'
+  COMPLETE_PLANET_INTRO: 'COMPLETE_PLANET_INTRO',
+  ZOOM_PLANET_INTRO: 'ZOOM_PLANET_INTRO'
 }
 
 const HANDLER = {
   [ACTION.COMPLETE_INTRO]: state => {
     return {...state, introShown: true};
   },
+  [ACTION.ZOOM_PLANET_INTRO]: state => {
+    if (state.planetIntroStatus === PLANET_INTRO_STATUS.NOT_SHOWN) {
+      return {...state, planetIntroStatus: PLANET_INTRO_STATUS.ZOOMING}
+    } else {
+      return state;
+    }
+  },
   [ACTION.COMPLETE_PLANET_INTRO]: state => {
-    return {...state, planetIntroShown: true}
+    return {...state, planetIntroStatus: PLANET_INTRO_STATUS.COMPLETE}
   }
-}
+};
+
+// Keeps track of current position in planet intro
+const PLANET_INTRO_STATUS = {
+  NOT_SHOWN: 0,
+  ZOOMING: 1,
+  COMPLETE: 2
+};
 
 const reducer = (state, { type, payload }) => {
   const handler = HANDLER[type];
@@ -39,7 +54,7 @@ const getInitialState = () => {
 
     // Track current status of game
     introShown: false,
-    planetIntroShown: false,
+    planetIntroStatus: PLANET_INTRO_STATUS.NOT_SHOWN,
 
   }
 }
@@ -55,12 +70,16 @@ export default (props) => {
     planetIndex,
     missionIndex,
     introShown,
-    planetIntroShown,
+    planetIntroStatus,
   } = state;
 
   // Handle entering and exiting introduction screens
   function handleCompleteIntro() {
     act(ACTION.COMPLETE_INTRO);
+  }
+
+  function handleZoomPlanetIntro() {
+    act(ACTION.ZOOM_PLANET_INTRO);
   }
 
   function handleCompletePlanetIntro() {
@@ -77,6 +96,7 @@ export default (props) => {
   function showPlanetIntro() {
     return <PlanetIntro
       planetIndex={planetIndex}
+      onZoomIntro={handleZoomPlanetIntro}
       onCompleteIntro={handleCompletePlanetIntro}
     />
   }
@@ -89,7 +109,9 @@ export default (props) => {
   }
 
   const backgroundColorSpring = useSpring({
-    to: {color: introShown ? (planetIntroShown ? PLANETS[planetIndex].colors.sky : 'black') : 'rgba(0, 0, 0, 0)'},
+    to: {color: introShown ? (
+      planetIntroStatus >= PLANET_INTRO_STATUS.ZOOMING ? PLANETS[planetIndex].colors.sky : 'black'
+      ) : 'rgba(0, 0, 0, 0)'},
     from: {color: 'rgba(0, 0, 0, 0)'},
     config: {duration: 1500}
   });
@@ -100,7 +122,7 @@ export default (props) => {
            style={{ backgroundColor: backgroundColorSpring.color }}
       >
           {!introShown ? showIntro() :
-           !planetIntroShown ? showPlanetIntro() :
+           (planetIntroStatus != PLANET_INTRO_STATUS.COMPLETE) ? showPlanetIntro() :
            showLevel()}
       </a.svg>
     </div>
