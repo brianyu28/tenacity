@@ -1,7 +1,3 @@
-export default function App() {
-  return (
-    <div className="app">
-      Tenacity
-    </div>
-  );
-}
+import Page from './components/Page';
+
+export default Page;
