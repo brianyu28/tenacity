@@ -1,18 +1,54 @@
+import { useState } from 'react';
+import { useSpring, animated as a } from 'react-spring';
+
 import { Item } from './Item';
 
-import { CANVAS_HEIGHT, CANVAS_WIDTH, GROUND_HEIGHT } from '../game/constants';
+import { BLOCK_NAMES } from '../game/blocks';
 import { PLANETS } from '../game/missions';
-import { OBJECTS, obj_y } from '../game/objects';
+import {  obj_y } from '../game/objects';
 
-export default ({ planetIndex, missionIndex }) => {
+export default ({ currentInstruction, planetIndex, missionIndex,
+                  program, programSubmitted }) => {
 
   const planet = PLANETS[planetIndex];
   const mission = planet.missions[missionIndex];
+  
+  const [instructionsCompleted, setInstructionsCompleted] = useState(0);
+  const [items, setItems] = useState(mission.items);
+
+  if (programSubmitted && currentInstruction < program.length && instructionsCompleted == currentInstruction) {
+    const instruction = program[currentInstruction];
+    
+    // Decide which instruction to use
+    switch (instruction) {
+
+      // Move the rover forward
+      case BLOCK_NAMES.FORWARD:
+        setInstructionsCompleted(x => x + 1);
+        setItems(items => {
+          const rover = items['rover'];
+          return {
+            ...items,
+            rover: {
+              ...rover,
+              x: rover.x + 100
+            }
+          }
+        });
+        break;
+
+      default:
+        console.log('ERROR: Unknown block.');
+    }
+  }
 
   return (
     <g>
-      <text x='50%' y='50%' style={{ fill: 'black' }}>work in progress</text>
-      {mission.items.map((item, i) => {
+      {Object.keys(items).map((itemName, i) => {
+
+        const item = items[itemName];
+
+        // Non-agent doesn't need to move
         return <Item
           key={i}
           object={item.object}

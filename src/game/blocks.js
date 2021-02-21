@@ -1,8 +1,12 @@
 // Blocks available for usage
 
+export const BLOCK_NAMES = {
+  FORWARD: 'FORWARD'
+}
+
 export const BLOCKS = {
 
-  FORWARD: {
+  [BLOCK_NAMES.FORWARD]: {
     name: 'Move Forward'
   }
 
@@ -23,6 +27,6 @@ export const remaining_blocks = (blocks, program) => {
 
   // Remove
   return blocks.reduce((acc, [block, count]) => (
-    [...acc, [block, count - (counts[block.name] || 0)]]
+    [...acc, [block, count - (counts[block] || 0)]]
   ), []);
 }

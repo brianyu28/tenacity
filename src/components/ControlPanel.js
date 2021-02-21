@@ -1,4 +1,7 @@
-export default ({ addToProgram, blocks, onResetProgram, program }) => {
+import { BLOCKS } from '../game/blocks';
+
+export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
+                  program, programSubmitted }) => {
   return (
     <div id='control-panel'>
       <div id='control-panel-container'>
@@ -6,12 +9,16 @@ export default ({ addToProgram, blocks, onResetProgram, program }) => {
           <div id='program'>
             {program.map((instruction, i) => {
               return <div key={i}>
-                {instruction}
+                {BLOCKS[instruction].name}
               </div>
             })}
           </div>
-          <button onClick={onResetProgram}>Reset</button>
-          <button>Submit Instructions</button>
+          {!programSubmitted &&
+          <div>
+            <button onClick={onResetProgram}>Reset</button>
+            <button onClick={onSubmitProgram}>Submit Instructions</button>
+          </div>
+          }
         </div>
         <div id='blocks'>
           {blocks.map(([block, count], i) => {
@@ -20,9 +27,9 @@ export default ({ addToProgram, blocks, onResetProgram, program }) => {
             return <button
               className='block'
               key={i}
-              onClick={() => addToProgram(block.name)}
+              onClick={() => addToProgram(block)}
             >
-              {block.name} (x{count})
+              {BLOCKS[block].name} (x{count})
             </button>
           })}
         </div>

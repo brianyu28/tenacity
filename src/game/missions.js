@@ -1,6 +1,6 @@
 // Game is divided into Planets and Missions
 
-import { BLOCKS } from './blocks';
+import { BLOCK_NAMES } from './blocks';
 import { OBJECTS } from './objects';
 
 export const PLANETS = [
@@ -22,12 +22,12 @@ export const PLANETS = [
       {
         objective: 'Navigate Tenacity back to the spacecraft for refueling.',
         blocks: [
-          [BLOCKS.FORWARD, 1]
+          [BLOCK_NAMES.FORWARD, 1]
         ],
-        items: [
-          {object: OBJECTS.ROCKET, x: 500},
-          {object: OBJECTS.ROVER, x: 400},
-        ],
+        items: {
+          'rocket': {object: OBJECTS.ROCKET, x: 500},
+          'rover': {object: OBJECTS.ROVER, x: 400},
+        },
         criteria: [
           {category: 'rover_x', value: 500}
         ]

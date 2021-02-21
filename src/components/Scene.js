@@ -27,6 +27,7 @@ const ACTION = {
   // Program actions
   ADD_TO_PROGRAM: 'ADD_TO_PROGRAM',
   RESET_PROGRAM: 'RESET_PROGRAM',
+  SUBMIT_PROGRAM: 'SUBMIT_PROGRAM',
 }
 
 const HANDLER = {
@@ -55,6 +56,9 @@ const HANDLER = {
   },
   [ACTION.RESET_PROGRAM]: state => {
     return {...state, program: []}
+  },
+  [ACTION.SUBMIT_PROGRAM]: state => {
+    return {...state, programSubmitted: true}
   }
 };
 
@@ -86,7 +90,9 @@ const getInitialState = (development) => {
     briefingShown: development ? true : false,
 
     // Current sequence of blocks
-    program: []
+    program: [],
+    programSubmitted: false,
+    currentInstruction: 0
 
   }
 }
@@ -104,7 +110,9 @@ export default (props) => {
     introShown,
     planetIntroStatus,
     briefingShown,
-    program
+    program,
+    programSubmitted,
+    currentInstruction
   } = state;
 
   const planet = PLANETS[planetIndex];
@@ -148,8 +156,11 @@ export default (props) => {
 
   function showLevel() {
     return <Level
+      currentInstruction={currentInstruction}
       planetIndex={planetIndex}
       missionIndex={missionIndex}
+      program={program}
+      programSubmitted={programSubmitted}
     />
   }
 
@@ -203,7 +214,9 @@ export default (props) => {
           addToProgram={addToProgram}
           blocks={remaining_blocks(mission.blocks, program)}
           onResetProgram={() => act(ACTION.RESET_PROGRAM)}
+          onSubmitProgram={() => act(ACTION.SUBMIT_PROGRAM)}
           program={program}
+          programSubmitted={programSubmitted}
         />
       }
     </div>
