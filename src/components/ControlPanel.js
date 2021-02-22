@@ -2,6 +2,21 @@ import { BLOCKS } from '../game/blocks';
 
 export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
                   program, programSubmitted }) => {
+
+  function blockClicked(block) {
+    if (!programSubmitted) {
+      addToProgram(block);
+    }
+  }
+
+  function submitProgram() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    setTimeout(onSubmitProgram, 1000);
+  }
+
   return (
     <div id='control-panel'>
       <div id='control-panel-container'>
@@ -16,7 +31,7 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
           {!programSubmitted &&
           <div>
             <button onClick={onResetProgram}>Reset</button>
-            <button onClick={onSubmitProgram}>Submit Instructions</button>
+            <button onClick={submitProgram}>Submit Instructions</button>
           </div>
           }
         </div>
@@ -27,7 +42,7 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
             return <button
               className='block'
               key={i}
-              onClick={() => addToProgram(block)}
+              onClick={() => blockClicked(block)}
             >
               {BLOCKS[block].name} (x{count})
             </button>
