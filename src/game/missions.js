@@ -33,7 +33,10 @@ export const PLANETS = [
         ]
       },
       {
-        objective: 'Mission 2 Objective'
+        objective: 'This Mission has yet to be created. Check back soon!',
+        blocks: [],
+        items: {},
+        criteria: []
       }
     ]
   },

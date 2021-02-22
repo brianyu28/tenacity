@@ -23,7 +23,11 @@ export default ({ planet, completedMissions }) => {
             cx={PADDING + CIRCLE_RADIUS + (CIRCLE_RADIUS * 2 + PADDING) * i}
             cy={PADDING + CIRCLE_RADIUS}
             r={CIRCLE_RADIUS}
-            style={{ fill: completedMissions > i ? planet.colors.main : 'black' }}
+            style={{
+                fill: completedMissions > i ? planet.colors.main : 'rgba(0, 0, 0, 0)',
+                stroke: planet.colors.main,
+                strokeWidth: completedMissions > i ? 0 : 1
+            }}
           />
         )
       })}

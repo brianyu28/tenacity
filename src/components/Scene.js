@@ -3,6 +3,7 @@ import { useSpring, animated as a } from 'react-spring';
 
 import ControlPanel from './ControlPanel';
 import GameIntro from './GameIntro';
+import Ground from './Ground';
 import PlanetIntro from './PlanetIntro';
 import ProgressIndicator from './ProgressIndicator';
 import Level from './Level';
@@ -14,7 +15,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, GROUND_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const ACTION = {
 
@@ -29,6 +30,10 @@ const ACTION = {
   RESET_PROGRAM: 'RESET_PROGRAM',
   SUBMIT_PROGRAM: 'SUBMIT_PROGRAM',
   SET_INST_PTR: 'SET_INST_PTR',
+
+  // Changing missions
+  NEXT_MISSION: 'NEXT_MISSION',
+  REPEAT_MISSION: 'REPEAT_MISSION'
 }
 
 const HANDLER = {
@@ -63,6 +68,54 @@ const HANDLER = {
   },
   [ACTION.SET_INST_PTR]: (state, instruction) => {
     return {...state, currentInstruction: instruction}
+  },
+
+  // Changing missions
+  [ACTION.NEXT_MISSION]: (state) => {
+    const planet = PLANETS[state.planetIndex];
+
+    // Next mission on this planet
+    if (state.missionIndex + 1 < planet.missions.length) {
+      return {
+        ...state,
+        missionIndex: state.missionIndex + 1,
+        round: state.round + 1,
+        program: [],
+        programSubmitted: false,
+        currentInstruction: 0
+      }
+
+    // Next mission takes us to a new planet
+    } else if (state.planetIndex + 1 < PLANETS.length) {
+      return {
+        ...state,
+        planetIndex: state.planetIndex + 1,
+        missionIndex: 0,
+        round: state.round + 1,
+        planetIntroShown: false,
+        briefingShown: false,
+        program: [],
+        programSubmitted: false,
+        currentInstruction: 0
+      }
+    
+    // No more levels
+    } else {
+      return {
+        ...state,
+        done: true
+      }
+    }
+  },
+
+  [ACTION.REPEAT_MISSION]: (state) => {
+    return {
+      ...state,
+      round: state.round + 1,
+      program: [],
+      programSubmitted: false,
+      currentInstruction: 0
+    }
   }
 };
 
@@ -87,6 +140,8 @@ const getInitialState = (development) => {
     // Track current mission for user
     planetIndex: 0,
     missionIndex: 0,
+    done: false,
+    round: 0,
 
     // Track current status of game
     introShown: development ? true : false,
@@ -116,7 +171,9 @@ export default (props) => {
     briefingShown,
     program,
     programSubmitted,
-    currentInstruction
+    round,
+    currentInstruction,
+    done
   } = state;
 
   const planet = PLANETS[planetIndex];
@@ -164,9 +221,12 @@ export default (props) => {
 
   function showLevel() {
     return <Level
+      key={round}
       currentInstruction={currentInstruction}
       planetIndex={planetIndex}
       missionIndex={missionIndex}
+      onFailure={() => act(ACTION.REPEAT_MISSION)}
+      onSuccess={() => act(ACTION.NEXT_MISSION)}
       setCurrentInstruction={setCurrentInstruction}
       program={program}
       programSubmitted={programSubmitted}
@@ -177,6 +237,12 @@ export default (props) => {
     return <MissionBriefing
       briefing={planet.briefing}
       onCompleteBriefing={handleCompleteBriefing}
+    />
+  }
+
+  function showGround() {
+    return <Ground
+      planet={planet}
     />
   }
 
@@ -191,6 +257,11 @@ export default (props) => {
   const levelInProgress = planetIntroStatus == PLANET_INTRO_STATUS.COMPLETE;
   const showControlPanel = levelInProgress && briefingShown;
 
+  // Temporary game over screen
+  if (done) {
+    return <div>game over</div>;
+  }
+
   return (
     <div style={{ maxWidth: CANVAS_WIDTH }}>
       <a.svg width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className='scene'
@@ -198,12 +269,7 @@ export default (props) => {
       >
 
         {/* Ground, appears when planet has been zoomed in  */}
-        {planetIntroStatus >= PLANET_INTRO_STATUS.ZOOMING &&
-          <rect
-            x={0} y={CANVAS_HEIGHT - GROUND_HEIGHT} width={CANVAS_WIDTH} height={GROUND_HEIGHT}
-            fill={planet.colors.main}
-          />
-        }
+        {planetIntroStatus >= PLANET_INTRO_STATUS.ZOOMING && showGround()}
 
         {levelInProgress && 
           <ProgressIndicator

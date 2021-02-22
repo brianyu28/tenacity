@@ -10,6 +10,7 @@ import {  obj_y } from '../game/objects';
 const AItem = a(Item);
 
 export default ({ currentInstruction, planetIndex, missionIndex,
+                  onSuccess, onFailure,
                   setCurrentInstruction, program, programSubmitted }) => {
 
   const planet = PLANETS[planetIndex];
@@ -17,7 +18,39 @@ export default ({ currentInstruction, planetIndex, missionIndex,
   
   const [instructionsCompleted, setInstructionsCompleted] = useState(0);
   const [items, setItems] = useState(mission.items);
+  const [winMessage, setWinMessage] = useState(false);
+  const [loseMessage, setLoseMessage] = useState(false);
 
+  // Check if level is won
+  function checkWin() {
+    for (let i = 0; i < mission.criteria.length; i++) {
+      if (!checkCriteria(mission.criteria[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Check if particular criteria is true
+  function checkCriteria(criterion) {
+    switch (criterion.category) {
+      
+      // Confirm x location of rover
+      case 'rover_x':
+        if (criterion.value === items.rover.x) {
+          return true;
+        }
+        return false;
+        break;
+
+      default:
+        console.log('Error: Unknown criterion.');
+        return false;
+    }
+
+  }
+
+  // Run an instruction
   if (programSubmitted && currentInstruction < program.length && instructionsCompleted == currentInstruction) {
     const instruction = program[currentInstruction];
     
@@ -45,9 +78,37 @@ export default ({ currentInstruction, planetIndex, missionIndex,
       default:
         console.log('ERROR: Unknown block.');
     }
-  }
+}
 
-  return (
+const winSpring = useSpring({
+  to: {opacity: winMessage ? 1 : 0},
+  from: {opacity: 0},
+  config: {duration: 1000},
+  delay: 500,
+  onRest: () => {
+    if (winMessage) {
+      setTimeout(() => {
+        onSuccess();
+      }, 2500);
+    }
+  }
+});
+
+const loseSpring = useSpring({
+  to: {opacity: loseMessage ? 1 : 0},
+  from: {opacity: 0},
+  config: {duration: 1000},
+  delay: 500,
+  onRest: () => {
+    if (loseMessage) {
+      setTimeout(() => {
+        onFailure();
+      }, 2500);
+    }
+  }
+});
+
+return (
     <g>
       {Object.keys(items).map((itemName, i) => {
 
@@ -61,9 +122,23 @@ export default ({ currentInstruction, planetIndex, missionIndex,
           },
           config: {duration: 1000},
           onRest: () => {
-            if (itemName === 'rover' && programSubmitted && instructionsCompleted > currentInstruction) {
+            
+            if (itemName === 'rover' && programSubmitted && instructionsCompleted === program.length) {
+              if (checkWin()) {
+                setWinMessage(true); 
+              } else {
+                setLoseMessage(true);
+              }
+            }
+
+            // When rover completes its action, move on to the next instruction
+            if (itemName === 'rover' && programSubmitted
+                && instructionsCompleted > currentInstruction
+                && instructionsCompleted != program.length) {
               setTimeout(() => {
                 setCurrentInstruction(currentInstruction + 1);
+
+
               }, 250);
             }
           }
@@ -77,6 +152,26 @@ export default ({ currentInstruction, planetIndex, missionIndex,
           y={itemSpring.elevation.interpolate(e => obj_y(item.object, e))}
         /> 
       })}
+      <a.text
+        x='50%'
+        y='20%'
+        dominantBaseline='middle'
+        textAnchor='middle'
+        opacity={winSpring.opacity}
+        style={{ fontSize: '80px', fill: planet.colors.text }}
+      >
+        Mission Success
+      </a.text>
+      <a.text
+        x='50%'
+        y='20%'
+        dominantBaseline='middle'
+        textAnchor='middle'
+        opacity={loseSpring.opacity}
+        style={{ fontSize: '80px', fill: planet.colors.text }}
+      >
+        Try Again
+      </a.text>
     </g>
   );
 }
