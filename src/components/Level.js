@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSpring, animated as a } from 'react-spring';
 
 import { Item } from './Item';
 
+import { getMissionLabel, logEvent } from '../analytics';
 import { BLOCK_NAMES } from '../game/blocks';
 import { PLANETS } from '../game/missions';
-import {  obj_y } from '../game/objects';
+import { obj_y } from '../game/objects';
 
 const AItem = a(Item);
 
@@ -15,7 +16,16 @@ export default ({ currentInstruction, planetIndex, missionIndex,
 
   const planet = PLANETS[planetIndex];
   const mission = planet.missions[missionIndex];
-  
+
+  useEffect(() => {
+    logEvent({
+      category: 'Level',
+      action: 'Start Level',
+      label: getMissionLabel(planetIndex, missionIndex)
+    });
+  }, []);
+
+  const [startTime, setStartTime] = useState(new Date());
   const [instructionsCompleted, setInstructionsCompleted] = useState(0);
   const [items, setItems] = useState(mission.items);
   const [winMessage, setWinMessage] = useState(false);
@@ -87,6 +97,12 @@ const winSpring = useSpring({
   delay: 500,
   onRest: () => {
     if (winMessage) {
+      logEvent({
+        category: 'Level',
+        action: 'Win Level',
+        label: getMissionLabel(planetIndex, missionIndex),
+        value: Math.round((new Date() - startTime) / 1000)
+      });
       setTimeout(() => {
         onSuccess();
       }, 2500);
@@ -101,6 +117,12 @@ const loseSpring = useSpring({
   delay: 500,
   onRest: () => {
     if (loseMessage) {
+      logEvent({
+        category: 'Level',
+        action: 'Lose Level',
+        label: getMissionLabel(planetIndex, missionIndex),
+        value: Math.round((new Date() - startTime) / 1000)
+      });
       setTimeout(() => {
         onFailure();
       }, 2500);

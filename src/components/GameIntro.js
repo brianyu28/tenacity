@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSpring, animated as a } from 'react-spring';
 
+import { logEvent } from '../analytics';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../game/constants';
 import '../css/GameIntro.css';
 
@@ -25,6 +26,10 @@ export default ({ onCompleteIntro, onStartPlaying }) => {
 
   // Start playing music and begin game
   const completeIntro = () => {
+    logEvent({
+      'category': 'Game',
+      'action': 'Play Game'
+    });
     onStartPlaying();
     setStart(true);
   };

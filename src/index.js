@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
 import App from './App';
+import { logPageview } from './analytics';
 import reportWebVitals from './reportWebVitals';
+
+logPageview();
 
 ReactDOM.render(
   <React.StrictMode>
