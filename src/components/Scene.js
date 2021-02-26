@@ -3,6 +3,7 @@ import { useSpring, animated as a } from 'react-spring';
 
 import ControlPanel from './ControlPanel';
 import GameIntro from './GameIntro';
+import GameWIP from './GameWIP';
 import Ground from './Ground';
 import PlanetIntro from './PlanetIntro';
 import ProgressIndicator from './ProgressIndicator';
@@ -15,7 +16,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, GROUND_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
-const DEV_MODE = false;
+const DEV_MODE = true;
 
 const ACTION = {
 
@@ -139,7 +140,7 @@ const getInitialState = (development) => {
 
     // Track current mission for user
     planetIndex: 0,
-    missionIndex: 0,
+    missionIndex: 1,
     done: false,
     round: 0,
 
@@ -259,7 +260,7 @@ export default (props) => {
 
   // Temporary game over screen
   if (done) {
-    return <div>game over</div>;
+    return <GameWIP />;
   }
 
   return (

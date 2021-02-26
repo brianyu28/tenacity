@@ -3,6 +3,13 @@
 import { BLOCK_NAMES } from './blocks';
 import { OBJECTS } from './objects';
 
+// Defaults for objects
+const defaults = {
+  elevation: 0,
+  costumeNumber: 0
+}
+const d = defaults;
+
 export const PLANETS = [
   {
     name: 'Mercury',
@@ -25,22 +32,28 @@ export const PLANETS = [
           [BLOCK_NAMES.FORWARD, 2]
         ],
         items: {
-          'rocket': {object: OBJECTS.ROCKET, x: 500},
-          'rover': {object: OBJECTS.ROVER, x: 300},
+          'rocket': {...d, object: OBJECTS.ROCKET, x: 500},
+          'rover': {...d, object: OBJECTS.ROVER, x: 300},
         },
         criteria: [
           {category: 'rover_x', value: 500}
         ]
       },
       {
-        objective: 'This Mission has yet to be created. Check back soon!',
-        blocks: [],
-        items: {},
-        criteria: []
+        objective: 'Get close to the crater to explore it. But be careful not to fall in!',
+        hint: 'You do not always need to use every block available to you.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 5]
+        ],
+        items: {
+          'rocket': {...d, object: OBJECTS.ROCKET, x: 100},
+          'rover': {...d, object: OBJECTS.ROVER, x: 100},
+          'crater': {...d, object: OBJECTS.MERCURY_CRATER, x: 500, elevation: -30, allowFall: true}
+        },
+        criteria: [
+          {category: 'rover_x', value: 400}
+        ]
       }
     ]
-  },
-  {
-    name: 'Venus'
   }
 ]

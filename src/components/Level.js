@@ -60,6 +60,17 @@ export default ({ currentInstruction, planetIndex, missionIndex,
 
   }
 
+  // Check to see if item will fall into something that allows falling
+  function checkFall(item) {
+    const x = item.x;
+    for (const i in items) {
+      if (items[i].allowFall && items[i].x == x && item.elevation === 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Run an instruction
   if (programSubmitted && currentInstruction < program.length && instructionsCompleted == currentInstruction) {
     const instruction = program[currentInstruction];
@@ -76,10 +87,24 @@ export default ({ currentInstruction, planetIndex, missionIndex,
             ...items,
             rover: {
               ...rover,
-              x: rover.x + 100,
+              x: rover.costumeNumber === 0 ? rover.x + 100 : rover.x - 100,
               prev: {
-                x: rover.x + 100
+                x: rover.x
               }
+            }
+          }
+        });
+        break;
+
+      case BLOCK_NAMES.TURN:
+        setInstructionsCompleted(x => x + 1);
+        setItems(items => {
+          const rover = items['rover'];
+          return {
+            ...items,
+            rover: {
+              ...rover,
+              costumeNumber: rover.costumeNumber === 0 ? 1 : 0
             }
           }
         });
@@ -130,12 +155,15 @@ const loseSpring = useSpring({
   }
 });
 
+
+
 return (
     <g>
       {Object.keys(items).map((itemName, i) => {
 
         const item = items[itemName];
 
+        // Animation for item
         const itemSpring = useSpring({
           to: {x: item.x, elevation: item.elevation || 0},
           from: {
@@ -144,6 +172,13 @@ return (
           },
           config: {duration: 1000},
           onRest: () => {
+
+            if (itemName === 'rover' && programSubmitted) {
+              if (checkFall(item)) {
+                // return;
+                // TODO: fix this
+              }
+            }
             
             if (itemName === 'rover' && programSubmitted && instructionsCompleted === program.length) {
               if (checkWin()) {
@@ -157,6 +192,7 @@ return (
             if (itemName === 'rover' && programSubmitted
                 && instructionsCompleted > currentInstruction
                 && instructionsCompleted != program.length) {
+
               setTimeout(() => {
                 setCurrentInstruction(currentInstruction + 1);
 
@@ -172,6 +208,8 @@ return (
           object={item.object}
           x={itemSpring.x}
           y={itemSpring.elevation.interpolate(e => obj_y(item.object, e))}
+          costumeIndex={item.costumeNumber}
+          center={item.object.center !== false}
         /> 
       })}
       <a.text

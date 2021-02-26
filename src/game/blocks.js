@@ -1,13 +1,17 @@
 // Blocks available for usage
 
 export const BLOCK_NAMES = {
-  FORWARD: 'FORWARD'
+  FORWARD: 'FORWARD',
+  TURN: 'TURN'
 }
 
 export const BLOCKS = {
 
   [BLOCK_NAMES.FORWARD]: {
     name: 'Move Forward'
+  },
+  [BLOCK_NAMES.TURN]: {
+    name: 'Turn Around'
   }
 
 }
