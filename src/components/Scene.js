@@ -16,7 +16,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, GROUND_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const ACTION = {
 
@@ -140,7 +140,7 @@ const getInitialState = (development) => {
 
     // Track current mission for user
     planetIndex: 0,
-    missionIndex: 1,
+    missionIndex: 0,
     done: false,
     round: 0,
 

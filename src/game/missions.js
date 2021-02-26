@@ -31,10 +31,10 @@ export const PLANETS = [
         blocks: [
           [BLOCK_NAMES.FORWARD, 2]
         ],
-        items: {
-          'rocket': {...d, object: OBJECTS.ROCKET, x: 500},
-          'rover': {...d, object: OBJECTS.ROVER, x: 300},
-        },
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 500},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
+        ],
         criteria: [
           {category: 'rover_x', value: 500}
         ]
@@ -45,11 +45,11 @@ export const PLANETS = [
         blocks: [
           [BLOCK_NAMES.FORWARD, 5]
         ],
-        items: {
-          'rocket': {...d, object: OBJECTS.ROCKET, x: 100},
-          'rover': {...d, object: OBJECTS.ROVER, x: 100},
-          'crater': {...d, object: OBJECTS.MERCURY_CRATER, x: 500, elevation: -30, allowFall: true}
-        },
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
+          {...d, id: 'crater', object: OBJECTS.MERCURY_CRATER, x: 500, elevation: -30, allowFall: true},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
+        ],
         criteria: [
           {category: 'rover_x', value: 400}
         ]

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSpring, animated as a } from 'react-spring';
+import { useSpring, useSprings, animated as a } from 'react-spring';
 
 import { Item } from './Item';
 
@@ -25,11 +25,19 @@ export default ({ currentInstruction, planetIndex, missionIndex,
     });
   }, []);
 
-  const [startTime, setStartTime] = useState(new Date());
-  const [instructionsCompleted, setInstructionsCompleted] = useState(0);
-  const [items, setItems] = useState(mission.items);
-  const [winMessage, setWinMessage] = useState(false);
-  const [loseMessage, setLoseMessage] = useState(false);
+  const [state, setState] = useState({
+    startTime: new Date(),
+    instructionsCompleted: 0,
+    items: mission.items,
+    winMessage: false,
+    loseMessage: false
+  });
+
+  const { startTime, instructionsCompleted, items, winMessage, loseMessage } = state;
+  
+  // Determine index of rover
+  const roverIndex = items.findIndex(item => item.id === 'rover');
+  const rover = items[roverIndex];
 
   // Check if level is won
   function checkWin() {
@@ -47,11 +55,10 @@ export default ({ currentInstruction, planetIndex, missionIndex,
       
       // Confirm x location of rover
       case 'rover_x':
-        if (criterion.value === items.rover.x) {
+        if (criterion.value === rover.x) {
           return true;
         }
         return false;
-        break;
 
       default:
         console.log('Error: Unknown criterion.');
@@ -61,10 +68,9 @@ export default ({ currentInstruction, planetIndex, missionIndex,
   }
 
   // Check to see if item will fall into something that allows falling
-  function checkFall(item) {
-    const x = item.x;
-    for (const i in items) {
-      if (items[i].allowFall && items[i].x == x && item.elevation === 0) {
+  function checkFall(target) {
+    for (const item of items) {
+      if (item.allowFall && item.x == target.x && target.elevation === 0) {
         return true;
       }
     }
@@ -72,42 +78,34 @@ export default ({ currentInstruction, planetIndex, missionIndex,
   }
 
   // Run an instruction
-  if (programSubmitted && currentInstruction < program.length && instructionsCompleted == currentInstruction) {
+  if (programSubmitted && currentInstruction < program.length &&
+      instructionsCompleted == currentInstruction && !winMessage && !loseMessage) {
     const instruction = program[currentInstruction];
-    
+
     // Decide which instruction to use
     switch (instruction) {
 
       // Move the rover forward
       case BLOCK_NAMES.FORWARD:
-        setInstructionsCompleted(x => x + 1);
-        setItems(items => {
-          const rover = items['rover'];
-          return {
-            ...items,
-            rover: {
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          items: state.items.map((item, i) => i === roverIndex ? {
               ...rover,
-              x: rover.costumeNumber === 0 ? rover.x + 100 : rover.x - 100,
-              prev: {
-                x: rover.x
-              }
-            }
-          }
-        });
+              x: rover.costumeNumber === 0 ? rover.x + 100 : rover.x - 100
+            } : item),
+        }));
         break;
 
       case BLOCK_NAMES.TURN:
-        setInstructionsCompleted(x => x + 1);
-        setItems(items => {
-          const rover = items['rover'];
-          return {
-            ...items,
-            rover: {
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          items: state.items.map((item, i) => i === roverIndex ? {
               ...rover,
               costumeNumber: rover.costumeNumber === 0 ? 1 : 0
-            }
-          }
-        });
+            } : item),
+        }));
         break;
 
       default:
@@ -155,62 +153,65 @@ const loseSpring = useSpring({
   }
 });
 
+const itemSprings = useSprings(items.length, items.map((item, i) => ({
+  to: {x: item.x, elevation: item.elevation},
+  config: {duration: 1000},
+  onRest: () => {
+
+    if (winMessage || loseMessage) {
+      return;
+    }
+
+    // Check for collisions
+    if (i === roverIndex && programSubmitted) {
+      if (checkFall(item)) {
+        setState(state => ({
+          ...state,
+          items: state.items.map((item, i) => i === roverIndex ? {
+            ...rover,
+            elevation: rover.elevation - 20
+          } : item),
+          loseMessage: true
+        }));
+        return;
+      }
+    }
+
+    // Check if program is over
+    if (i === roverIndex && programSubmitted && state.instructionsCompleted === program.length) {
+      if (checkWin()) {
+        setState(state => ({...state, winMessage: true})); 
+      } else {
+        setState(state => ({...state, loseMessage: true})); 
+      }
+    }
+
+    // When rover completes its action, move on to the next instruction
+    if (i === roverIndex && programSubmitted
+        && state.instructionsCompleted > currentInstruction
+        && state.instructionsCompleted != program.length) {
+
+      setTimeout(() => {
+        setCurrentInstruction(currentInstruction + 1);
+      }, 250);
+    }
+  }
+})));
+
 
 
 return (
     <g>
-      {Object.keys(items).map((itemName, i) => {
-
-        const item = items[itemName];
-
-        // Animation for item
-        const itemSpring = useSpring({
-          to: {x: item.x, elevation: item.elevation || 0},
-          from: {
-            x: (item.prev && item.prev.x) ? item.prev.x : item.x,
-            elevation: (item.prev && item.prev.elevation) ? item.prev.elevation : item.elevation || 0
-          },
-          config: {duration: 1000},
-          onRest: () => {
-
-            if (itemName === 'rover' && programSubmitted) {
-              if (checkFall(item)) {
-                // return;
-                // TODO: fix this
-              }
-            }
-            
-            if (itemName === 'rover' && programSubmitted && instructionsCompleted === program.length) {
-              if (checkWin()) {
-                setWinMessage(true); 
-              } else {
-                setLoseMessage(true);
-              }
-            }
-
-            // When rover completes its action, move on to the next instruction
-            if (itemName === 'rover' && programSubmitted
-                && instructionsCompleted > currentInstruction
-                && instructionsCompleted != program.length) {
-
-              setTimeout(() => {
-                setCurrentInstruction(currentInstruction + 1);
-
-
-              }, 250);
-            }
-          }
-        });
-
-        // Non-agent doesn't need to move
-        return <AItem
+      {itemSprings.map((spring, i) => {
+        const item = items[i];
+        return (<AItem
           key={i}
           object={item.object}
-          x={itemSpring.x}
-          y={itemSpring.elevation.interpolate(e => obj_y(item.object, e))}
+          x={spring.x}
+          y={spring.elevation.interpolate(e => obj_y(item.object, e))}
           costumeIndex={item.costumeNumber}
           center={item.object.center !== false}
-        /> 
+        />);
       })}
       <a.text
         x='50%'
