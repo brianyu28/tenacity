@@ -1,27 +1,28 @@
 {
   "files": {
     "main.css": "/static/css/main.8a734e05.chunk.css",
-    "main.js": "/static/js/main.71dfeeaf.chunk.js",
-    "main.js.map": "/static/js/main.71dfeeaf.chunk.js.map",
+    "main.js": "/static/js/main.56e179ae.chunk.js",
+    "main.js.map": "/static/js/main.56e179ae.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.37215c28.js",
     "runtime-main.js.map": "/static/js/runtime-main.37215c28.js.map",
-    "static/js/2.63f9a138.chunk.js": "/static/js/2.63f9a138.chunk.js",
-    "static/js/2.63f9a138.chunk.js.map": "/static/js/2.63f9a138.chunk.js.map",
+    "static/js/2.0f656dc3.chunk.js": "/static/js/2.0f656dc3.chunk.js",
+    "static/js/2.0f656dc3.chunk.js.map": "/static/js/2.0f656dc3.chunk.js.map",
     "static/js/3.742c1e37.chunk.js": "/static/js/3.742c1e37.chunk.js",
     "static/js/3.742c1e37.chunk.js.map": "/static/js/3.742c1e37.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.8a734e05.chunk.css.map": "/static/css/main.8a734e05.chunk.css.map",
-    "static/js/2.63f9a138.chunk.js.LICENSE.txt": "/static/js/2.63f9a138.chunk.js.LICENSE.txt",
+    "static/js/2.0f656dc3.chunk.js.LICENSE.txt": "/static/js/2.0f656dc3.chunk.js.LICENSE.txt",
     "static/media/amerika.421d9361.mp3": "/static/media/amerika.421d9361.mp3",
     "static/media/mercury_crater.af0b0b06.svg": "/static/media/mercury_crater.af0b0b06.svg",
+    "static/media/rock_red.31b2b06f.svg": "/static/media/rock_red.31b2b06f.svg",
     "static/media/rocket.0dec99f9.svg": "/static/media/rocket.0dec99f9.svg",
     "static/media/rover.b107911f.svg": "/static/media/rover.b107911f.svg",
     "static/media/rover_flipped.1ce4141d.svg": "/static/media/rover_flipped.1ce4141d.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.37215c28.js",
-    "static/js/2.63f9a138.chunk.js",
+    "static/js/2.0f656dc3.chunk.js",
     "static/css/main.8a734e05.chunk.css",
-    "static/js/main.71dfeeaf.chunk.js"
+    "static/js/main.56e179ae.chunk.js"
   ]
 }
