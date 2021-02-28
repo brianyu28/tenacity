@@ -17,6 +17,7 @@ import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
 const DEV_MODE = false;
+const MOST_RECENT_LEVEL = false;
 
 const ACTION = {
 
@@ -139,8 +140,8 @@ const getInitialState = (development) => {
   return {
 
     // Track current mission for user
-    planetIndex: 0,
-    missionIndex: 0,
+    planetIndex: MOST_RECENT_LEVEL ? PLANETS.length - 1 :  0,
+    missionIndex: MOST_RECENT_LEVEL ? PLANETS[PLANETS.length - 1].missions.length - 1 : 0,
     done: false,
     round: 0,
 

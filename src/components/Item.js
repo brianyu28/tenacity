@@ -1,4 +1,4 @@
-export const Item = ({object, x, y, center, costumeIndex}) => {
+export const Item = ({object, x, y, center, costumeIndex, opacity}) => {
 
   // Use costume 0 by default
   if (costumeIndex === undefined) {
@@ -11,6 +11,7 @@ export const Item = ({object, x, y, center, costumeIndex}) => {
       height={object.height}
       x={center === false ? x : x - (object.width / 2)}
       y={y}
+      opacity={opacity}
     />
   )
 }

@@ -2,7 +2,8 @@
 
 export const BLOCK_NAMES = {
   FORWARD: 'FORWARD',
-  TURN: 'TURN'
+  TURN: 'TURN',
+  PICK_UP: 'PICK_UP'
 }
 
 export const BLOCKS = {
@@ -12,6 +13,9 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.TURN]: {
     name: 'Turn Around'
+  },
+  [BLOCK_NAMES.PICK_UP]: {
+    name: 'Pick Up Object'
   }
 
 }

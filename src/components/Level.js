@@ -60,6 +60,14 @@ export default ({ currentInstruction, planetIndex, missionIndex,
         }
         return false;
 
+      case 'rover_carry':
+        for (const item of items) {
+          if (item.id === criterion.value && item.carried === true) {
+            return true;
+          }
+        }
+        return false;
+
       default:
         console.log('Error: Unknown criterion.');
         return false;
@@ -77,6 +85,17 @@ export default ({ currentInstruction, planetIndex, missionIndex,
     return false;
   }
 
+  // Get object to pick up; closest object to rover, null if none
+  function getPickupObject() {
+    let obj = null; 
+    for (const item of items) {
+      if (item !== rover && item.x === rover.x && (obj === null || item.elevation > obj.elevation)) {
+        obj = item;
+      }
+    }
+    return obj;
+  }
+
   // Run an instruction
   if (programSubmitted && currentInstruction < program.length &&
       instructionsCompleted == currentInstruction && !winMessage && !loseMessage) {
@@ -90,9 +109,9 @@ export default ({ currentInstruction, planetIndex, missionIndex,
         setState(state => ({
           ...state,
           instructionsCompleted: state.instructionsCompleted + 1,
-          items: state.items.map((item, i) => i === roverIndex ? {
-              ...rover,
-              x: rover.costumeNumber === 0 ? rover.x + 100 : rover.x - 100
+          items: state.items.map((item, i) => i === roverIndex || item.carried === true ? {
+              ...item,
+              x: rover.costumeNumber === 0 ? item.x + 100 : item.x - 100
             } : item),
         }));
         break;
@@ -106,6 +125,24 @@ export default ({ currentInstruction, planetIndex, missionIndex,
               costumeNumber: rover.costumeNumber === 0 ? 1 : 0
             } : item),
         }));
+        break;
+
+      case BLOCK_NAMES.PICK_UP:
+        const obj = getPickupObject();
+        if (obj != null) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: state.items.map((item, i) => item === obj ? {
+              ...obj,
+              elevation: 30,
+              carried: true
+            } : i === roverIndex ? {
+              ...rover,
+              util: (rover.util || 0) + 1
+            } : item),
+          }))
+        }
         break;
 
       default:
@@ -154,7 +191,12 @@ const loseSpring = useSpring({
 });
 
 const itemSprings = useSprings(items.length, items.map((item, i) => ({
-  to: {x: item.x, elevation: item.elevation},
+  to: {
+    x: item.x,
+    elevation: item.elevation,
+    opacity: item.opacity,
+    util: item.util || 0 // utility variable to force transitions
+  },
   config: {duration: 1000},
   onRest: () => {
 
@@ -167,9 +209,9 @@ const itemSprings = useSprings(items.length, items.map((item, i) => ({
       if (checkFall(item)) {
         setState(state => ({
           ...state,
-          items: state.items.map((item, i) => i === roverIndex ? {
-            ...rover,
-            elevation: rover.elevation - 20
+          items: state.items.map((item, i) => i === roverIndex || item.carried === true ? {
+            ...item,
+            elevation: item.elevation - 20
           } : item),
           loseMessage: true
         }));
@@ -211,6 +253,7 @@ return (
           y={spring.elevation.interpolate(e => obj_y(item.object, e))}
           costumeIndex={item.costumeNumber}
           center={item.object.center !== false}
+          opacity={spring.opacity}
         />);
       })}
       <a.text

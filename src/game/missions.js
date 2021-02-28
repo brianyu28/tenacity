@@ -6,7 +6,8 @@ import { OBJECTS } from './objects';
 // Defaults for objects
 const defaults = {
   elevation: 0,
-  costumeNumber: 0
+  opacity: 1,
+  costumeNumber: 0,
 }
 const d = defaults;
 
@@ -52,6 +53,24 @@ export const PLANETS = [
         ],
         criteria: [
           {category: 'rover_x', value: 400}
+        ]
+      },
+      {
+        objective: 'Return the rock sample back to the rocket.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 5],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.TURN, 1]
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
+          {...d, id: 'crater', object: OBJECTS.MERCURY_CRATER, x: 500, elevation: -30, allowFall: true},
+          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 400, elevation: -30},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
+        ],
+        criteria: [
+          {category: 'rover_x', value: 100},
+          {category: 'rover_carry', value: 'rock'},
         ]
       }
     ]

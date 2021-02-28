@@ -2,6 +2,7 @@ import rocket from '../assets/rocket.svg';
 import rover from '../assets/rover.svg';
 import rover_flipped from '../assets/rover_flipped.svg';
 import mercury_crater from '../assets/mercury_crater.svg';
+import rock_red from '../assets/rock_red.svg';
 
 import { CANVAS_HEIGHT, GROUND_HEIGHT } from './constants';
 
@@ -20,6 +21,11 @@ export const OBJECTS = {
     images: [mercury_crater],
     height: 30,
     width: 90
+  },
+  ROCK_RED: {
+    images: [rock_red],
+    height: 30,
+    width: 40
   }
 }
 
