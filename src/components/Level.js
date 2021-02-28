@@ -142,6 +142,14 @@ export default ({ currentInstruction, planetIndex, missionIndex,
               util: (rover.util || 0) + 1
             } : item),
           }))
+        } else {
+          setState(state => ({
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: state.items.map((item, i) => i === roverIndex ? {
+              ...rover,
+              util: (rover.util || 0) + 1
+            } : item),
+          }));
         }
         break;
 
