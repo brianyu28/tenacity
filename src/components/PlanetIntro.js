@@ -5,7 +5,7 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../game/constants';
 import { PLANETS } from '../game/missions';
 
 const START_RADIUS = 100;
-const RADIUS_INCREMENT = 20;
+const RADIUS_INCREMENT = 50;
 
 export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
 
@@ -37,11 +37,24 @@ export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
 
   // Angle for planets' orbit
   const planetMotionSpring = useSpring({
-    to: {angle: 2 * Math.PI},
+    to: {angle: 4 * Math.PI},
     from: {angle: 0},
-    config: {duration: 10000},
+    config: {duration: 20000},
     reset: resetOrbit,
     onRest: () => setResetOrbit(state => !state)
+  });
+
+  // Planet zoom
+  const planetZoomSpring = useSpring({
+    to: {zoom: planetZoom ? 1 : 0},
+    from: {zoom: 0},
+    config: {duration: 1000},
+    onRest: () => {
+      if (planetZoom) {
+        onZoomIntro();
+        setPlanetText(true);
+      } 
+    }
   });
 
   // Fade out for scene
@@ -75,21 +88,6 @@ export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
 
     const isLastPlanet = i == planetIndex;
 
-    let planetGrowthSpring = undefined;
-    if (isLastPlanet) {
-      planetGrowthSpring = useSpring({
-        to: {r: planetZoom ? 1600 : planet.introConfig.size * scale},
-        from: {r: planet.introConfig.size * scale},
-        config: {duration: 1000},
-        onRest: () => {
-          if (planetZoom) {
-            onZoomIntro();
-            setPlanetText(true);
-          }
-        }
-      });
-    }
-
     const radius = START_RADIUS + RADIUS_INCREMENT * i;
     return <a.g key={i} opacity={planetOpacitySpring.opacity}>
       <a.circle
@@ -101,9 +99,17 @@ export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
         strokeWidth={2}
       />
       <a.circle
-        cx={planetMotionSpring.angle.interpolate(theta => (CANVAS_WIDTH / 2) + scale * (radius * Math.cos(theta)))}
-        cy={planetMotionSpring.angle.interpolate(theta => (CANVAS_HEIGHT / 2) - scale * (radius * Math.sin(theta)))}
-        r={isLastPlanet ? planetGrowthSpring.r : planet.introConfig.size * scale}
+        cx={planetMotionSpring.angle.interpolate(theta =>
+          (CANVAS_WIDTH / 2) + scale * (radius * Math.cos(theta * (10000 / planet.introConfig.orbitDuration))))
+        }
+        cy={planetMotionSpring.angle.interpolate(theta =>
+          (CANVAS_HEIGHT / 2) - scale * (radius * Math.sin(theta * (10000 / planet.introConfig.orbitDuration))))
+        }
+        r={isLastPlanet ?
+            planetZoomSpring.zoom.interpolate(zoom => 
+              planet.introConfig.size * scale + zoom * (1600 - planet.introConfig.size * scale)
+            )
+            : planet.introConfig.size * scale}
         style={{ fill: planet.colors.main }}
       /> 
     </a.g>;

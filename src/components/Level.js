@@ -4,7 +4,7 @@ import { useSpring, useSprings, animated as a } from 'react-spring';
 import { Item } from './Item';
 
 import { getMissionLabel, logEvent } from '../analytics';
-import { BLOCK_NAMES } from '../game/blocks';
+import { BLOCK_NAMES, EVENTS } from '../game/blocks';
 import { PLANETS } from '../game/missions';
 import { obj_y } from '../game/objects';
 
@@ -30,14 +30,17 @@ export default ({ currentInstruction, planetIndex, missionIndex,
     instructionsCompleted: 0,
     items: mission.items,
     winMessage: false,
-    loseMessage: false
+    loseMessage: false,
+    events: [] // events that have taken place
   });
 
   const { startTime, instructionsCompleted, items, winMessage, loseMessage } = state;
   
   // Determine index of rover
   const roverIndex = items.findIndex(item => item.id === 'rover');
-  const rover = items[roverIndex];
+  const rover = roverIndex !== -1 ? items[roverIndex] : null;
+  const rocketIndex = items.findIndex(item => item.id === 'rocket');
+  const rocket = rocketIndex !== -1 ? items[rocketIndex] : null;
 
   // Check if level is won
   function checkWin() {
@@ -63,6 +66,15 @@ export default ({ currentInstruction, planetIndex, missionIndex,
       case 'rover_carry':
         for (const item of items) {
           if (item.id === criterion.value && item.carried === true) {
+            return true;
+          }
+        }
+        return false;
+      
+      // Confirm that event took place
+      case 'event':
+        for (const event of state.events) {
+          if (criterion.value === event) {
             return true;
           }
         }
@@ -144,6 +156,7 @@ export default ({ currentInstruction, planetIndex, missionIndex,
           }))
         } else {
           setState(state => ({
+            ...state,
             instructionsCompleted: state.instructionsCompleted + 1,
             items: state.items.map((item, i) => i === roverIndex ? {
               ...rover,
@@ -152,6 +165,26 @@ export default ({ currentInstruction, planetIndex, missionIndex,
           }));
         }
         break;
+
+      case BLOCK_NAMES.LAUNCH_ROCKET:
+        const shouldLaunch = rocket && rover && rocket.x === rover.x;
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          items: shouldLaunch ?
+            state.items.map((item, i) =>
+              i === roverIndex ? {
+                ...rover,
+                opacity: -10
+              } :
+              i === rocketIndex ? {
+                ...rocket,
+                elevation: 600
+              } : item
+            )
+          : state.items,
+          events: [...state.events, EVENTS.ROCKET_LAUNCH]
+        }))
 
       default:
         console.log('ERROR: Unknown block.');

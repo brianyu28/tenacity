@@ -1,10 +1,14 @@
 // Blocks available for usage
 
+export const EVENTS = {
+  ROCKET_LAUNCH: 'ROCKET_LAUNCH'
+};
+
 export const BLOCK_NAMES = {
   FORWARD: 'FORWARD',
   TURN: 'TURN',
   PICK_UP: 'PICK_UP'
-}
+};
 
 export const BLOCKS = {
 
@@ -16,8 +20,10 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.PICK_UP]: {
     name: 'Pick Up Object'
+  },
+  [BLOCK_NAMES.LAUNCH_ROCKET]: {
+    name: 'Launch Rocket'
   }
-
 }
 
 export const remaining_blocks = (blocks, program) => {

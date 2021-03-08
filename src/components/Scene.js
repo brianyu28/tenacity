@@ -12,12 +12,13 @@ import MissionObjective from './MissionObjective';
 import MissionBriefing from './MissionBriefing';
 
 import { PLANETS } from '../game/missions';
-import { CANVAS_WIDTH, CANVAS_HEIGHT, GROUND_HEIGHT } from '../game/constants';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ROUND_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
 const DEV_MODE = false;
-const MOST_RECENT_LEVEL = false;
+const START_PLANET = 0;
+const START_MISSION = 0;
 
 const ACTION = {
 
@@ -37,6 +38,13 @@ const ACTION = {
   NEXT_MISSION: 'NEXT_MISSION',
   REPEAT_MISSION: 'REPEAT_MISSION'
 }
+
+// Keeps track of current position in planet intro
+const PLANET_INTRO_STATUS = {
+  NOT_SHOWN: 0,
+  ZOOMING: 1,
+  COMPLETE: 2
+};
 
 const HANDLER = {
 
@@ -94,7 +102,7 @@ const HANDLER = {
         planetIndex: state.planetIndex + 1,
         missionIndex: 0,
         round: state.round + 1,
-        planetIntroShown: false,
+        planetIntroStatus: PLANET_INTRO_STATUS.NOT_SHOWN,
         briefingShown: false,
         program: [],
         programSubmitted: false,
@@ -121,13 +129,6 @@ const HANDLER = {
   }
 };
 
-// Keeps track of current position in planet intro
-const PLANET_INTRO_STATUS = {
-  NOT_SHOWN: 0,
-  ZOOMING: 1,
-  COMPLETE: 2
-};
-
 const reducer = (state, { type, payload }) => {
   const handler = HANDLER[type];
   if (!handler) return state;
@@ -140,8 +141,8 @@ const getInitialState = (development) => {
   return {
 
     // Track current mission for user
-    planetIndex: MOST_RECENT_LEVEL ? PLANETS.length - 1 :  0,
-    missionIndex: MOST_RECENT_LEVEL ? PLANETS[PLANETS.length - 1].missions.length - 1 : 0,
+    planetIndex: START_PLANET || 0,
+    missionIndex: START_MISSION || 0,
     done: false,
     round: 0,
 

@@ -1,6 +1,6 @@
 // Game is divided into Planets and Missions
 
-import { BLOCK_NAMES } from './blocks';
+import { BLOCK_NAMES, EVENTS } from './blocks';
 import { OBJECTS } from './objects';
 
 // Defaults for objects
@@ -21,8 +21,8 @@ export const PLANETS = [
       textColor: 'black'
     },
     colors: {
-      main: '#ae7c43',
-      sky: '#dbb78f',
+      main: '#bfbaac',
+      sky: '#7d705b',
       text: 'black'
     },
     briefing: 'The Tenacity rover has arrived on Mercury. Use the control panel to help Tenacity complete its missions.',
@@ -72,7 +72,49 @@ export const PLANETS = [
           {category: 'rover_x', value: 100},
           {category: 'rover_carry', value: 'rock'},
         ]
+      },
+      {
+        objective: "We're done here on Mercury! Launch the rocket to head to the next planet.",
+        blocks: [
+          [BLOCK_NAMES.LAUNCH_ROCKET, 1]
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 400},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
+        ],
+        criteria: [
+          {category: 'event', value: EVENTS.ROCKET_LAUNCH}
+        ]
       }
+    ]
+  },
+  {
+    name: 'Venus',
+    introConfig: {
+      size: 20,
+      scale: 1.7,
+      orbitDuration: 28900,
+      textColor: 'black'
+    },
+    colors: {
+      main: '#ae7c43',
+      sky: '#dbb78f',
+      text: 'black'
+    },
+    briefing: 'Welcome to Venus!',
+    missions: [
+      {
+        objective: 'This mission has not yet been created. Check back soon!',
+        blocks: [
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 500},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
+        ],
+        criteria: [
+          {category: 'rover_x', value: 0}
+        ]
+      },
     ]
   }
 ]
