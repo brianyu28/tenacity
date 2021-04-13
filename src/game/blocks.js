@@ -51,3 +51,14 @@ export const remaining_blocks = (blocks, program) => {
     [...acc, [block, count - (counts[block] || 0)]]
   ), []);
 }
+
+export const instruction_label = ({ block, args }) => {
+  const name = BLOCKS[block].name;
+  switch (block) {
+    case BLOCK_NAMES.REPEAT:
+      return `${name} ${args.count}`;
+
+    default:
+      return name;
+  }
+}

@@ -16,8 +16,8 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
-const DEV_MODE = false;
-const START_PLANET = 0;
+const DEV_MODE = true;
+const START_PLANET = 1;
 const START_MISSION = 0;
 
 const ACTION = {
@@ -68,8 +68,8 @@ const HANDLER = {
 
   // Program actions
   // TODO: add args
-  [ACTION.ADD_TO_PROGRAM]: (state, block, args) => {
-    return {...state, program: [...state.program, { block, args } ]}
+  [ACTION.ADD_TO_PROGRAM]: (state, {block, args}) => {
+    return {...state, program: [...state.program, {block, args} ]}
   },
   [ACTION.RESET_PROGRAM]: state => {
     return {...state, program: []}
@@ -201,7 +201,7 @@ export default (props) => {
   }
 
   function addToProgram(block, args) {
-    act(ACTION.ADD_TO_PROGRAM, block, args);
+    act(ACTION.ADD_TO_PROGRAM, {block, args});
   }
 
   function setCurrentInstruction(i) {

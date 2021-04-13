@@ -1,4 +1,4 @@
-import { BLOCKS } from '../game/blocks';
+import { BLOCKS, instruction_label } from '../game/blocks';
 
 export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
                   program, programSubmitted }) => {
@@ -34,7 +34,7 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
           <div id='program'>
             {program.map((instruction, i) => {
               return <div key={i}>
-                {BLOCKS[instruction.block].name}
+                {instruction_label(instruction)}
               </div>
             })}
           </div>
