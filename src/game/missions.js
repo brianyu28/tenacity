@@ -106,6 +106,7 @@ export const PLANETS = [
       {
         objective: 'This mission has not yet been created. Check back soon!',
         blocks: [
+          [BLOCK_NAMES.REPEAT, 1]
         ],
         items: [
           {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 500},

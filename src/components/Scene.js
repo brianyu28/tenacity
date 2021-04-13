@@ -12,7 +12,7 @@ import MissionObjective from './MissionObjective';
 import MissionBriefing from './MissionBriefing';
 
 import { PLANETS } from '../game/missions';
-import { CANVAS_WIDTH, CANVAS_HEIGHT, ROUND_HEIGHT } from '../game/constants';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
@@ -67,8 +67,9 @@ const HANDLER = {
   },
 
   // Program actions
-  [ACTION.ADD_TO_PROGRAM]: (state, block) => {
-    return {...state, program: [...state.program, block]}
+  // TODO: add args
+  [ACTION.ADD_TO_PROGRAM]: (state, block, args) => {
+    return {...state, program: [...state.program, { block, args } ]}
   },
   [ACTION.RESET_PROGRAM]: state => {
     return {...state, program: []}
@@ -199,8 +200,8 @@ export default (props) => {
     act(ACTION.COMPLETE_BRIEFING);
   }
 
-  function addToProgram(block) {
-    act(ACTION.ADD_TO_PROGRAM, block);
+  function addToProgram(block, args) {
+    act(ACTION.ADD_TO_PROGRAM, block, args);
   }
 
   function setCurrentInstruction(i) {
@@ -257,7 +258,7 @@ export default (props) => {
     config: {duration: 1500}
   });
 
-  const levelInProgress = planetIntroStatus == PLANET_INTRO_STATUS.COMPLETE;
+  const levelInProgress = planetIntroStatus === PLANET_INTRO_STATUS.COMPLETE;
   const showControlPanel = levelInProgress && briefingShown;
 
   // Temporary game over screen

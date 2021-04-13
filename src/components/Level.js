@@ -23,7 +23,7 @@ export default ({ currentInstruction, planetIndex, missionIndex,
       action: 'Start Level',
       label: getMissionLabel(planetIndex, missionIndex)
     });
-  }, []);
+  }, [missionIndex, planetIndex]);
 
   const [state, setState] = useState({
     startTime: new Date(),
@@ -110,11 +110,11 @@ export default ({ currentInstruction, planetIndex, missionIndex,
 
   // Run an instruction
   if (programSubmitted && currentInstruction < program.length &&
-      instructionsCompleted == currentInstruction && !winMessage && !loseMessage) {
+      instructionsCompleted === currentInstruction && !winMessage && !loseMessage) {
     const instruction = program[currentInstruction];
 
     // Decide which instruction to use
-    switch (instruction) {
+    switch (instruction.block) {
 
       // Move the rover forward
       case BLOCK_NAMES.FORWARD:
@@ -184,7 +184,8 @@ export default ({ currentInstruction, planetIndex, missionIndex,
             )
           : state.items,
           events: [...state.events, EVENTS.ROCKET_LAUNCH]
-        }))
+        }));
+        break;
 
       default:
         console.log('ERROR: Unknown block.');

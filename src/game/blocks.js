@@ -7,7 +7,8 @@ export const EVENTS = {
 export const BLOCK_NAMES = {
   FORWARD: 'FORWARD',
   TURN: 'TURN',
-  PICK_UP: 'PICK_UP'
+  PICK_UP: 'PICK_UP',
+  REPEAT: 'REPEAT'
 };
 
 export const BLOCKS = {
@@ -23,6 +24,12 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.LAUNCH_ROCKET]: {
     name: 'Launch Rocket'
+  },
+  [BLOCK_NAMES.REPEAT]: {
+    name: 'Repeat',
+    args: [
+      {'key': 'count', 'text': 'How many times to repeat?'}
+    ]
   }
 }
 
@@ -31,7 +38,7 @@ export const remaining_blocks = (blocks, program) => {
   // Count up how many times each block is currently used in the program
   const counts = {};
   for (let i = 0; i < program.length; i++) {
-    const block = program[i];
+    const block = program[i].block;
     if (counts[block] === undefined) {
       counts[block] = 1;
     } else {

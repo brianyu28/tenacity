@@ -3,9 +3,19 @@ import { BLOCKS } from '../game/blocks';
 export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
                   program, programSubmitted }) => {
 
-  function blockClicked(block) {
+  function blockClicked(blockId) {
     if (!programSubmitted) {
-      addToProgram(block);
+
+      const block = BLOCKS[blockId];
+
+      // Check for block arguments to add
+      const args = {};
+      if (block.args !== undefined) {
+        for (const arg of block.args) {
+          args[arg.key] = window.prompt(arg.text);
+        }
+      }
+      addToProgram(blockId, args);
     }
   }
 
@@ -24,7 +34,7 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
           <div id='program'>
             {program.map((instruction, i) => {
               return <div key={i}>
-                {BLOCKS[instruction].name}
+                {BLOCKS[instruction.block].name}
               </div>
             })}
           </div>
@@ -37,8 +47,8 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
         </div>
         <div id='blocks'>
           {blocks.map(([block, count], i) => {
-            if (count == 0)
-              return;
+            if (count === 0)
+              return false;
             return <button
               className='block'
               key={i}
