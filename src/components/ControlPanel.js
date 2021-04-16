@@ -1,7 +1,8 @@
 import { BLOCKS, instruction_label, validate_program } from '../game/blocks';
+import { getMissionLabel, logEvent } from '../analytics';
 
 const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
-                  program, programSubmitted }) => {
+                  program, programSubmitted, planetIndex, missionIndex }) => {
 
   function blockClicked(blockId) {
     if (!programSubmitted) {
@@ -13,6 +14,9 @@ const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
       if (block.args !== undefined) {
         for (const arg of block.args) {
           args[arg.key] = window.prompt(arg.text);
+          if (args[arg.key] === null) {
+            return;
+          }
         }
       }
       addToProgram(blockId, args);
@@ -25,6 +29,12 @@ const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
 
     // Don't allow submission of an invalid program
     if (!isValid) {
+      logEvent({
+        category: 'Error',
+        action: 'Invalid Program Error',
+        label: getMissionLabel(planetIndex, missionIndex),
+        value: error
+      });
       alert(error);
       return;
     }

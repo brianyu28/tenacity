@@ -4,6 +4,7 @@ import rover_flipped from '../assets/rover_flipped.svg';
 import mercury_crater from '../assets/mercury_crater.svg';
 import rock_red from '../assets/rock_red.svg';
 import volcano from '../assets/volcano.svg';
+import photograph from '../assets/photograph.svg';
 
 import { CANVAS_HEIGHT, GROUND_HEIGHT } from './constants';
 
@@ -32,6 +33,11 @@ export const OBJECTS = {
     images: [volcano],
     height: 100,
     width: 100,
+  },
+  PHOTOGRAPH: {
+    images: [photograph],
+    height: 60,
+    width: 60
   }
 }
 

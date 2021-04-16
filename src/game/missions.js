@@ -117,7 +117,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
         ],
         criteria: [
-          {category: 'rover_x', value: 0}
+          {category: 'photograph', value: 700}
         ]
       },
     ]

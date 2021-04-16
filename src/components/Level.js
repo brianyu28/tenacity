@@ -6,7 +6,7 @@ import Item from './Item';
 import { getMissionLabel, logEvent } from '../analytics';
 import { BLOCK_NAMES, EVENTS } from '../game/blocks';
 import { PLANETS } from '../game/missions';
-import { obj_y } from '../game/objects';
+import { OBJECTS, obj_y } from '../game/objects';
 
 const AItem = a(Item);
 
@@ -30,11 +30,12 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     items: mission.items,
     winMessage: false,
     loseMessage: false,
+    photographs: [], // x locations of photographs
     loopMetadata: {}, // how many times has each loop run so far
     events: [] // events that have taken place
   });
 
-  const { startTime, currentInstruction, instructionsCompleted, items, winMessage, loseMessage } = state;
+  const { startTime, currentInstruction, instructionsCompleted, items, photographs, winMessage, loseMessage } = state;
   
   // Determine index of rover
   const roverIndex = items.findIndex(item => item.id === 'rover');
@@ -77,6 +78,14 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           if (criterion.value === event) {
             return true;
           }
+        }
+        return false;
+
+      case 'photograph':
+        for (const photograph of photographs)  {
+          if (criterion.value === photograph) {
+            return true;
+          };
         }
         return false;
 
@@ -200,8 +209,8 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         if (iterationsCompleted >= instruction.args.count) {
           setState(state => ({
             ...state,
-            currentInstruction: instruction.jumpTo,
-            instructionsCompleted: instruction.jumpTo,
+            currentInstruction: instruction.meta.jumpTo - 1,
+            instructionsCompleted: instruction.meta.jumpTo,
             items: roverNoop(state.items),
           }));
 
@@ -225,6 +234,15 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           ...state,
           currentInstruction: instruction.meta.jumpBackTo,
           instructionsCompleted: instruction.meta.jumpBackTo,
+          items: roverNoop(state.items),
+        }));
+        break;
+
+      case BLOCK_NAMES.TAKE_PHOTO:
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          photographs: [...state.photographs, rover.x],
           items: roverNoop(state.items),
         }));
         break;
@@ -343,6 +361,20 @@ return (
           opacity={spring.opacity}
         />);
       })}
+      {
+        photographs.map((x, i) => {
+          const photograph = OBJECTS.PHOTOGRAPH;
+          return (<AItem
+            key={i}
+            object={photograph}
+            x={20 + (photograph.width + 10) * i}
+            y={obj_y(photograph, -80)}
+            costumeIndex={0}
+            center={false}
+            opacity={1}
+          />);
+        })
+      }
       <a.text
         x='50%'
         y='20%'
