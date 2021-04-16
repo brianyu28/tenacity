@@ -1,4 +1,4 @@
-export default ({ briefing, onCompleteBriefing }) => {
+const MissionBriefing = ({ briefing, onCompleteBriefing }) => {
   return (
     <div style={{ fontSize: '24px', textAlign: 'center' }}>
       {briefing}
@@ -7,3 +7,5 @@ export default ({ briefing, onCompleteBriefing }) => {
     </div>
   );
 }
+
+export default MissionBriefing;

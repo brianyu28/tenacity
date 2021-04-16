@@ -8,7 +8,7 @@ import backgroundMusic from '../assets/amerika.mp3';
 
 const ASound = a(Sound);
 
-export default () => {
+const Page = () => {
 
   const [playing, setPlaying] = useState(false);
   const handleStartPlaying = () => setPlaying(true);
@@ -37,3 +37,5 @@ export default () => {
     </div>
   );
 }
+
+export default Page;

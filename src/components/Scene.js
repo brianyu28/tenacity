@@ -74,8 +74,8 @@ const HANDLER = {
   [ACTION.RESET_PROGRAM]: state => {
     return {...state, program: []}
   },
-  [ACTION.SUBMIT_PROGRAM]: state => {
-    return {...state, programSubmitted: true}
+  [ACTION.SUBMIT_PROGRAM]: (state, augmentedProgram) => {
+    return {...state, program: augmentedProgram, programSubmitted: true}
   },
   [ACTION.SET_INST_PTR]: (state, instruction) => {
     return {...state, currentInstruction: instruction}
@@ -160,7 +160,7 @@ const getInitialState = (development) => {
   }
 }
 
-export default (props) => {
+const Scene = (props) => {
 
   const { onStartPlaying } = props;
 
@@ -293,7 +293,7 @@ export default (props) => {
           addToProgram={addToProgram}
           blocks={remaining_blocks(mission.blocks, program)}
           onResetProgram={() => act(ACTION.RESET_PROGRAM)}
-          onSubmitProgram={() => act(ACTION.SUBMIT_PROGRAM)}
+          onSubmitProgram={(augmentedProgram) => act(ACTION.SUBMIT_PROGRAM, augmentedProgram)}
           program={program}
           programSubmitted={programSubmitted}
         />
@@ -301,3 +301,5 @@ export default (props) => {
     </div>
   );
 };
+
+export default Scene;

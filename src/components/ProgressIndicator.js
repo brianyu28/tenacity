@@ -3,7 +3,7 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../game/constants';
 const PADDING = 15;
 const CIRCLE_RADIUS = 20;
 
-export default ({ planet, completedMissions }) => {
+const ProgressIndicator = ({ planet, completedMissions }) => {
   return (
     <g>
       <text
@@ -34,3 +34,5 @@ export default ({ planet, completedMissions }) => {
     </g>
   )
 };
+
+export default ProgressIndicator;

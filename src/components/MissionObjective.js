@@ -1,4 +1,4 @@
-export default ({ missionNumber, objective }) => {
+const MissionObjective = ({ missionNumber, objective }) => {
   return (
     <div style={{ fontSize: '24px', textAlign: 'center' }}>
       <strong>Mission {missionNumber} Objective</strong>
@@ -7,3 +7,5 @@ export default ({ missionNumber, objective }) => {
     </div>
   );
 }
+
+export default MissionObjective;

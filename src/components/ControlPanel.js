@@ -1,6 +1,6 @@
-import { BLOCKS, instruction_label } from '../game/blocks';
+import { BLOCKS, instruction_label, validate_program } from '../game/blocks';
 
-export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
+const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
                   program, programSubmitted }) => {
 
   function blockClicked(blockId) {
@@ -20,11 +20,22 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
   }
 
   function submitProgram() {
+
+    const { isValid, augmentedProgram, error } = validate_program(program);
+
+    // Don't allow submission of an invalid program
+    if (!isValid) {
+      alert(error);
+      return;
+    }
+
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
-    setTimeout(onSubmitProgram, 1000);
+    setTimeout(() => {
+      onSubmitProgram(augmentedProgram);
+    }, 1000);
   }
 
   return (
@@ -62,3 +73,5 @@ export default ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
     </div>
   );
 }
+
+export default ControlPanel;

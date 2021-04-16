@@ -7,7 +7,7 @@ import { PLANETS } from '../game/missions';
 const START_RADIUS = 100;
 const RADIUS_INCREMENT = 50;
 
-export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
+const PlanetIntro = ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
 
   // Determine current planet and scale
   const planet = PLANETS[planetIndex];
@@ -151,3 +151,5 @@ export default ({ onCompleteIntro, onZoomIntro, planetIndex }) => {
     </a.g>
   );
 }
+
+export default PlanetIntro;

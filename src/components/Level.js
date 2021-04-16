@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSpring, useSprings, animated as a } from 'react-spring';
 
-import { Item } from './Item';
+import Item from './Item';
 
 import { getMissionLabel, logEvent } from '../analytics';
 import { BLOCK_NAMES, EVENTS } from '../game/blocks';
@@ -10,7 +10,7 @@ import { obj_y } from '../game/objects';
 
 const AItem = a(Item);
 
-export default ({ currentInstruction, planetIndex, missionIndex,
+const Level = ({ currentInstruction, planetIndex, missionIndex,
                   onSuccess, onFailure,
                   setCurrentInstruction, program, programSubmitted }) => {
 
@@ -31,6 +31,7 @@ export default ({ currentInstruction, planetIndex, missionIndex,
     items: mission.items,
     winMessage: false,
     loseMessage: false,
+    loopMetadata: {}, // how many times has each loop run so far
     events: [] // events that have taken place
   });
 
@@ -108,6 +109,18 @@ export default ({ currentInstruction, planetIndex, missionIndex,
     return obj;
   }
 
+  // Takes a list of items and returns items with the util value for the rover flipped
+  // Doesn't functionally change anything about the items, but triggers an animation
+  function roverNoop(items) {
+    return items.map((item, i) => i === roverIndex ? {
+      ...rover,
+      util: (rover.util || 0) + 1
+    } : item);
+  }
+
+  console.log('should I run an instruction?');
+  console.log(programSubmitted);
+
   // Run an instruction
   if (programSubmitted && currentInstruction < program.length &&
       instructionsCompleted === currentInstruction && !winMessage && !loseMessage) {
@@ -158,10 +171,7 @@ export default ({ currentInstruction, planetIndex, missionIndex,
           setState(state => ({
             ...state,
             instructionsCompleted: state.instructionsCompleted + 1,
-            items: state.items.map((item, i) => i === roverIndex ? {
-              ...rover,
-              util: (rover.util || 0) + 1
-            } : item),
+            items: roverNoop(state.items),
           }));
         }
         break;
@@ -184,6 +194,40 @@ export default ({ currentInstruction, planetIndex, missionIndex,
             )
           : state.items,
           events: [...state.events, EVENTS.ROCKET_LAUNCH]
+        }));
+        break;
+
+      case BLOCK_NAMES.REPEAT:
+        const iterationsCompleted = state.loopMetadata[instruction.meta.id] || 0;
+
+        // Done looping
+        if (iterationsCompleted >= instruction.args.count) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: instruction.jumpTo,
+            items: roverNoop(state.items),
+          }));
+
+        // Need to loop more
+        } else {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: roverNoop(state.items),
+            loopMetadata: {
+              ...state.loopMetadata,
+              [instruction.meta.id]: iterationsCompleted + 1
+            }
+          }));
+        }
+        break;
+
+      case BLOCK_NAMES.END_REPEAT:
+        console.log('END REPEAT');
+        setState(state => ({
+          ...state,
+          instructionsCompleted: instruction.meta.jumpBackTo,
+          items: roverNoop(state.items),
         }));
         break;
 
@@ -273,7 +317,7 @@ const itemSprings = useSprings(items.length, items.map((item, i) => ({
     // When rover completes its action, move on to the next instruction
     if (i === roverIndex && programSubmitted
         && state.instructionsCompleted > currentInstruction
-        && state.instructionsCompleted != program.length) {
+        && state.instructionsCompleted !== program.length) {
 
       setTimeout(() => {
         setCurrentInstruction(currentInstruction + 1);
@@ -321,3 +365,5 @@ return (
     </g>
   );
 }
+
+export default Level;

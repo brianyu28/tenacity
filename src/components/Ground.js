@@ -5,7 +5,7 @@ const TICK_INTERVAL = 100;
 const TICK_WIDTH = 1;
 const TICK_HEIGHT = 10;
 
-export default ({ planet }) => {
+const Ground = ({ planet }) => {
   return (
     <g>
       <rect
@@ -24,3 +24,5 @@ export default ({ planet }) => {
     </g>
   );
 }
+
+export default Ground;

@@ -8,7 +8,7 @@ import '../css/GameIntro.css';
 const BUTTON_WIDTH = 200;
 const BUTTON_HEIGHT = 80;
 
-export default ({ onCompleteIntro, onStartPlaying }) => {
+const GameIntro = ({ onCompleteIntro, onStartPlaying }) => {
 
   // State to keep track of whether play button has been clicked
   const [start, setStart] = useState(false);
@@ -87,3 +87,5 @@ export default ({ onCompleteIntro, onStartPlaying }) => {
     </a.g>
   );
 }
+
+export default GameIntro;

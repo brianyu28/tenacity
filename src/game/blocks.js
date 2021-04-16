@@ -6,9 +6,11 @@ export const EVENTS = {
 
 export const BLOCK_NAMES = {
   FORWARD: 'FORWARD',
+  TAKE_PHOTO: 'TAKE_PHOTO',
   TURN: 'TURN',
   PICK_UP: 'PICK_UP',
-  REPEAT: 'REPEAT'
+  REPEAT: 'REPEAT',
+  END_REPEAT: 'END REPEAT',
 };
 
 export const BLOCKS = {
@@ -25,12 +27,18 @@ export const BLOCKS = {
   [BLOCK_NAMES.LAUNCH_ROCKET]: {
     name: 'Launch Rocket'
   },
+  [BLOCK_NAMES.TAKE_PHOTO]: {
+    name: 'Take Photo'
+  },
   [BLOCK_NAMES.REPEAT]: {
     name: 'Repeat',
     args: [
       {'key': 'count', 'text': 'How many times to repeat?'}
     ]
-  }
+  },
+  [BLOCK_NAMES.END_REPEAT]: {
+    name: 'End Repeat'
+  },
 }
 
 export const remaining_blocks = (blocks, program) => {
@@ -61,4 +69,62 @@ export const instruction_label = ({ block, args }) => {
     default:
       return name;
   }
+}
+
+// Check if a program is structurally correct
+// e.g. ensure all repeat blocks have an 'end repeat'
+// This function also adds metadata to block that's useful for execution
+// e.g. for 'end' blocks, keep tracks of where the jump back to should be
+export const validate_program = (program) => {
+  const augmentedProgram = [];
+  const stack = [];
+  for (let i = 0; i < program.length; i++) {
+
+    // Make a copy of the instruction before mutation
+    const instruction = Object.assign({}, program[i]);
+    instruction.meta = {id: i};
+
+    switch (instruction.block) {
+
+      case BLOCK_NAMES.REPEAT:
+        stack.push({type: BLOCK_NAMES.REPEAT, line: i});
+        const count = parseInt(instruction.args.count);
+        if (isNaN(count)) {
+          return {isValid: false, error: 'Tenacity only understands an integer number of times to repeat!'};
+        }
+        instruction.args.count = count;
+        break;
+
+      case BLOCK_NAMES.END_REPEAT:
+        const top = stack.pop();
+        if (top === undefined) {
+          return {isValid: false, error: 'Tenacity can only End Repeat after a matching Repeat instruction.'};
+        }
+        else if (top.type !== BLOCK_NAMES.REPEAT) {
+          return {isValid: false, error: 'Tenacity tried to End Repeat, but it looks like some other part of the program needs to be resolved first.'};
+        }
+        instruction.meta.jumpBackTo = top.line;
+        augmentedProgram[top.line].meta.jumpTo = i + 1;
+        break;
+
+      default:
+        break;
+    }
+
+    augmentedProgram.push(instruction);
+  }
+
+  // Make sure nothing is left on the stack
+  const top = stack.pop();
+  if (top !== undefined) {
+    if (top.type === BLOCK_NAMES.REPEAT) {
+      return {isValid: false, error: 'Tenacity found a Repeat instruction, but it needs a matching End Repeat instruction so that it knows when to stop repeating.'};
+    }
+    else {
+      // TODO: Shouldn't ever come up, but make this error more descriptive just in case.
+      return {isValid: false, error: 'Tenacity found a mistake in the program.'};
+    }
+  }
+
+  return {isValid: true, augmentedProgram}
 }

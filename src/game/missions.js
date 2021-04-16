@@ -104,13 +104,17 @@ export const PLANETS = [
     briefing: 'Welcome to Venus!',
     missions: [
       {
-        objective: 'This mission has not yet been created. Check back soon!',
+        objective: 'Get to the base of the volcano and take a photo.',
         blocks: [
-          [BLOCK_NAMES.REPEAT, 1]
+          [BLOCK_NAMES.FORWARD, 1],
+          [BLOCK_NAMES.TAKE_PHOTO, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
         ],
         items: [
-          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 500},
-          {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
+          {...d, id: 'volcano', object: OBJECTS.VOLCANO, x: 700},
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
         ],
         criteria: [
           {category: 'rover_x', value: 0}

@@ -1,4 +1,4 @@
-export default () => {
+const GameWIP = () => {
   return (<div style={{ maxWidth: '500px' }}>
     <div>
       Tenacity is a work in progress, and you've reached the end of what's been
@@ -13,3 +13,5 @@ export default () => {
     </div>
   </div>);
 }
+
+export default GameWIP;
