@@ -10,9 +10,7 @@ import { obj_y } from '../game/objects';
 
 const AItem = a(Item);
 
-const Level = ({ currentInstruction, planetIndex, missionIndex,
-                  onSuccess, onFailure,
-                  setCurrentInstruction, program, programSubmitted }) => {
+const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, programSubmitted }) => {
 
   const planet = PLANETS[planetIndex];
   const mission = planet.missions[missionIndex];
@@ -27,6 +25,7 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
 
   const [state, setState] = useState({
     startTime: new Date(),
+    currentInstruction: 0,
     instructionsCompleted: 0,
     items: mission.items,
     winMessage: false,
@@ -35,7 +34,7 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
     events: [] // events that have taken place
   });
 
-  const { startTime, instructionsCompleted, items, winMessage, loseMessage } = state;
+  const { startTime, currentInstruction, instructionsCompleted, items, winMessage, loseMessage } = state;
   
   // Determine index of rover
   const roverIndex = items.findIndex(item => item.id === 'rover');
@@ -91,7 +90,7 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
   // Check to see if item will fall into something that allows falling
   function checkFall(target) {
     for (const item of items) {
-      if (item.allowFall && item.x == target.x && target.elevation === 0) {
+      if (item.allowFall && item.x === target.x && target.elevation === 0) {
         return true;
       }
     }
@@ -117,9 +116,6 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
       util: (rover.util || 0) + 1
     } : item);
   }
-
-  console.log('should I run an instruction?');
-  console.log(programSubmitted);
 
   // Run an instruction
   if (programSubmitted && currentInstruction < program.length &&
@@ -204,6 +200,7 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
         if (iterationsCompleted >= instruction.args.count) {
           setState(state => ({
             ...state,
+            currentInstruction: instruction.jumpTo,
             instructionsCompleted: instruction.jumpTo,
             items: roverNoop(state.items),
           }));
@@ -212,6 +209,7 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
         } else {
           setState(state => ({
             ...state,
+            currentInstruction: state.currentInstruction + 1,
             instructionsCompleted: state.instructionsCompleted + 1,
             items: roverNoop(state.items),
             loopMetadata: {
@@ -223,9 +221,9 @@ const Level = ({ currentInstruction, planetIndex, missionIndex,
         break;
 
       case BLOCK_NAMES.END_REPEAT:
-        console.log('END REPEAT');
         setState(state => ({
           ...state,
+          currentInstruction: instruction.meta.jumpBackTo,
           instructionsCompleted: instruction.meta.jumpBackTo,
           items: roverNoop(state.items),
         }));
@@ -320,7 +318,10 @@ const itemSprings = useSprings(items.length, items.map((item, i) => ({
         && state.instructionsCompleted !== program.length) {
 
       setTimeout(() => {
-        setCurrentInstruction(currentInstruction + 1);
+        setState(state => ({
+          ...state,
+          currentInstruction: state.currentInstruction + 1
+        }));
       }, 250);
     }
   }

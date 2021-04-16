@@ -32,7 +32,6 @@ const ACTION = {
   ADD_TO_PROGRAM: 'ADD_TO_PROGRAM',
   RESET_PROGRAM: 'RESET_PROGRAM',
   SUBMIT_PROGRAM: 'SUBMIT_PROGRAM',
-  SET_INST_PTR: 'SET_INST_PTR',
 
   // Changing missions
   NEXT_MISSION: 'NEXT_MISSION',
@@ -77,9 +76,6 @@ const HANDLER = {
   [ACTION.SUBMIT_PROGRAM]: (state, augmentedProgram) => {
     return {...state, program: augmentedProgram, programSubmitted: true}
   },
-  [ACTION.SET_INST_PTR]: (state, instruction) => {
-    return {...state, currentInstruction: instruction}
-  },
 
   // Changing missions
   [ACTION.NEXT_MISSION]: (state) => {
@@ -93,7 +89,6 @@ const HANDLER = {
         round: state.round + 1,
         program: [],
         programSubmitted: false,
-        currentInstruction: 0
       }
 
     // Next mission takes us to a new planet
@@ -107,7 +102,6 @@ const HANDLER = {
         briefingShown: false,
         program: [],
         programSubmitted: false,
-        currentInstruction: 0
       }
     
     // No more levels
@@ -125,7 +119,6 @@ const HANDLER = {
       round: state.round + 1,
       program: [],
       programSubmitted: false,
-      currentInstruction: 0
     }
   }
 };
@@ -155,7 +148,6 @@ const getInitialState = (development) => {
     // Current sequence of blocks
     program: [],
     programSubmitted: false,
-    currentInstruction: 0
 
   }
 }
@@ -176,7 +168,6 @@ const Scene = (props) => {
     program,
     programSubmitted,
     round,
-    currentInstruction,
     done
   } = state;
 
@@ -204,10 +195,6 @@ const Scene = (props) => {
     act(ACTION.ADD_TO_PROGRAM, {block, args});
   }
 
-  function setCurrentInstruction(i) {
-    act(ACTION.SET_INST_PTR, i);
-  }
-
   function showIntro() {
     return <GameIntro
       onStartPlaying={onStartPlaying}
@@ -226,12 +213,10 @@ const Scene = (props) => {
   function showLevel() {
     return <Level
       key={round}
-      currentInstruction={currentInstruction}
       planetIndex={planetIndex}
       missionIndex={missionIndex}
       onFailure={() => act(ACTION.REPEAT_MISSION)}
       onSuccess={() => act(ACTION.NEXT_MISSION)}
-      setCurrentInstruction={setCurrentInstruction}
       program={program}
       programSubmitted={programSubmitted}
     />
