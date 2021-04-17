@@ -38,7 +38,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
         ],
         criteria: [
-          {category: 'rover_x', value: 500, message: 'Rover did not make it back to spacecraft.'}
+          {category: 'rover_x', value: 500, message: 'Tenacity did not make it back to spacecraft.'}
         ]
       },
       {
@@ -52,7 +52,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
         ],
         criteria: [
-          {category: 'rover_x', value: 400}
+          {category: 'rover_x', value: 400, message: 'Tenacity did not make it close enough to crater.'}
         ]
       },
       {
@@ -69,8 +69,8 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
         ],
         criteria: [
-          {category: 'rover_x', value: 100},
-          {category: 'rover_carry', value: 'rock'},
+          {category: 'rover_x', value: 100, message: 'Tenacity did not make it back to rocket.'},
+          {category: 'rover_carry', value: 'rock', message: 'Tenacity does not have rock sample.'},
         ]
       },
       {
@@ -83,7 +83,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
         ],
         criteria: [
-          {category: 'event', value: EVENTS.ROCKET_LAUNCH}
+          {category: 'event', value: EVENTS.ROCKET_LAUNCH, message: 'Rocket did not launch.'}
         ]
       }
     ]
@@ -118,7 +118,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
         ],
         criteria: [
-          {category: 'photograph', value: 700}
+          {category: 'photograph', value: 700, message: 'Tenacity did not take photograph of volcano.'},
         ]
       },
       {
@@ -136,7 +136,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
         ],
         criteria: [
-          {category: 'photograph', value: 700}
+          {category: 'rover_carry', value: 'rock', message: 'Tenacity does not have rock sample.'},
         ]
       },
     ]

@@ -118,6 +118,17 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     return false;
   }
 
+  // Checks if a bridge can be built at a particular x location
+  // Bridges can only be built over fallable items
+  function canBuildBridge(x) {
+    for (const item of items) {
+      if (item.allowFall && item.x === x) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Get object to pick up; closest object to rover, null if none
   function getPickupObject() {
     let obj = null; 
@@ -260,12 +271,21 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         break;
 
       case BLOCK_NAMES.BRIDGE:
-        setState(state => ({
-          ...state,
-          instructionsCompleted: state.instructionsCompleted + 1,
-          bridges: [...state.bridges, rover.costumeNumber === 0 ? rover.x + STEP_SIZE : rover.x - STEP_SIZE],
-          items: roverNoop(state.items),
-        }));
+        const bridgeX = rover.costumeNumber === 0 ? rover.x + STEP_SIZE : rover.x - STEP_SIZE;
+        if (canBuildBridge(bridgeX)) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            bridges: [...state.bridges, bridgeX],
+            items: roverNoop(state.items),
+          }));
+        } else {
+          setState(state => ({
+            ...state,
+           loseMessage: 'Tenacity can only build bridges over craters.'
+          }));
+        }
+        
         break;
 
       default:
@@ -336,7 +356,7 @@ const itemSprings = useSprings(items.length, items.map((item, i) => ({
             ...item,
             elevation: item.elevation - 20
           } : item),
-          loseMessage: true
+          loseMessage: 'Tenacity fell into crater.'
         }));
         return;
       }

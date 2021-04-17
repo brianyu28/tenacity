@@ -16,7 +16,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../game/constants';
 import { remaining_blocks } from '../game/blocks';
 
 // Skip certain sequences
-const DEV_MODE = true;
+const DEV_MODE = false;
 const START_PLANET = 0;
 const START_MISSION = 0;
 
