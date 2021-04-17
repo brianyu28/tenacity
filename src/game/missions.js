@@ -177,18 +177,33 @@ export const PLANETS = [
           [BLOCK_NAMES.END_REPEAT, 1],
         ],
         items: [
-          {...d, id: 'crater1', object: OBJECTS.VENUS_CRATER, x: 400, allowFall: true, elevation: -30},
-          {...d, id: 'rock1', object: OBJECTS.ROCK_RED, x: 500, elevation: -30},
-          {...d, id: 'crater2', object: OBJECTS.VENUS_CRATER, x: 200, allowFall: true, elevation: -30},
-          {...d, id: 'rock2', object: OBJECTS.ROCK_RED, x: 100, elevation: -30},
-          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 300},
-          {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
+          {...d, id: 'crater1', object: OBJECTS.VENUS_CRATER, x: 500, allowFall: true, elevation: -30},
+          {...d, id: 'rock1', object: OBJECTS.ROCK_BLUE, x: 600, elevation: -30},
+          {...d, id: 'crater2', object: OBJECTS.VENUS_CRATER, x: 300, allowFall: true, elevation: -30},
+          {...d, id: 'rock2', object: OBJECTS.ROCK_BLUE, x: 200, elevation: -30},
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 400},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
         ],
         criteria: [
-          {category: 'location_x', id: 'rock1', value: 300, message: 'Both rock samples were not dropped off at rocket.'},
-          {category: 'location_x', id: 'rock2', value: 300, message: 'Both rock samples were not dropped off at rocket.'},
+          {category: 'location_x', id: 'rock1', value: 400, message: 'Both rock samples were not dropped off at rocket.'},
+          {category: 'location_x', id: 'rock2', value: 400, message: 'Both rock samples were not dropped off at rocket.'},
         ]
       },
+      {
+        objective: "We're done here on Venus! Launch the rocket to head to the next planet.",
+        blocks: [
+          [BLOCK_NAMES.LAUNCH_ROCKET, 1]
+        ],
+        items: [
+          {...d, id: 'crater1', object: OBJECTS.VENUS_CRATER, x: 500, allowFall: true, elevation: -30},
+          {...d, id: 'crater2', object: OBJECTS.VENUS_CRATER, x: 300, allowFall: true, elevation: -30},
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 400},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
+        ],
+        criteria: [
+          {category: 'event', value: EVENTS.ROCKET_LAUNCH, message: 'Rocket did not launch.'}
+        ]
+      }
     ]
   }
 ]

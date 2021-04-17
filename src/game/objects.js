@@ -4,6 +4,7 @@ import rover from '../assets/rover.svg';
 import rover_flipped from '../assets/rover_flipped.svg';
 import mercury_crater from '../assets/mercury_crater.svg';
 import venus_crater from '../assets/mercury_crater.svg';
+import rock_blue from '../assets/rock_blue.svg';
 import rock_red from '../assets/rock_red.svg';
 import volcano from '../assets/volcano.svg';
 import photograph from '../assets/photograph.svg';
@@ -38,6 +39,11 @@ export const OBJECTS = {
   },
   ROCK_RED: {
     images: [rock_red],
+    height: 30,
+    width: 40
+  },
+  ROCK_BLUE: {
+    images: [rock_blue],
     height: 30,
     width: 40
   },
