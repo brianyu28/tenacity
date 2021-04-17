@@ -1,19 +1,24 @@
 {
   "files": {
     "main.css": "/static/css/main.cad9a011.chunk.css",
-    "main.js": "/static/js/main.302106f1.chunk.js",
-    "main.js.map": "/static/js/main.302106f1.chunk.js.map",
+    "main.js": "/static/js/main.e155fefe.chunk.js",
+    "main.js.map": "/static/js/main.e155fefe.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.37215c28.js",
     "runtime-main.js.map": "/static/js/runtime-main.37215c28.js.map",
-    "static/js/2.e5a9c56a.chunk.js": "/static/js/2.e5a9c56a.chunk.js",
-    "static/js/2.e5a9c56a.chunk.js.map": "/static/js/2.e5a9c56a.chunk.js.map",
+    "static/js/2.096e5fee.chunk.js": "/static/js/2.096e5fee.chunk.js",
+    "static/js/2.096e5fee.chunk.js.map": "/static/js/2.096e5fee.chunk.js.map",
     "static/js/3.742c1e37.chunk.js": "/static/js/3.742c1e37.chunk.js",
     "static/js/3.742c1e37.chunk.js.map": "/static/js/3.742c1e37.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.cad9a011.chunk.css.map": "/static/css/main.cad9a011.chunk.css.map",
-    "static/js/2.e5a9c56a.chunk.js.LICENSE.txt": "/static/js/2.e5a9c56a.chunk.js.LICENSE.txt",
+    "static/js/2.096e5fee.chunk.js.LICENSE.txt": "/static/js/2.096e5fee.chunk.js.LICENSE.txt",
     "static/media/amerika.421d9361.mp3": "/static/media/amerika.421d9361.mp3",
     "static/media/bridge.76f2dfc2.svg": "/static/media/bridge.76f2dfc2.svg",
+    "static/media/button_blue_pressed.14541aa3.svg": "/static/media/button_blue_pressed.14541aa3.svg",
+    "static/media/button_blue_unpressed.11c1cc6b.svg": "/static/media/button_blue_unpressed.11c1cc6b.svg",
+    "static/media/button_red_pressed.108133ca.svg": "/static/media/button_red_pressed.108133ca.svg",
+    "static/media/button_red_unpressed.86163d0f.svg": "/static/media/button_red_unpressed.86163d0f.svg",
+    "static/media/lab.18e56e2e.svg": "/static/media/lab.18e56e2e.svg",
     "static/media/mercury_crater.af0b0b06.svg": "/static/media/mercury_crater.af0b0b06.svg",
     "static/media/photograph.86f8d649.svg": "/static/media/photograph.86f8d649.svg",
     "static/media/rock_blue.2c73d521.svg": "/static/media/rock_blue.2c73d521.svg",
@@ -25,8 +30,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.37215c28.js",
-    "static/js/2.e5a9c56a.chunk.js",
+    "static/js/2.096e5fee.chunk.js",
     "static/css/main.cad9a011.chunk.css",
-    "static/js/main.302106f1.chunk.js"
+    "static/js/main.e155fefe.chunk.js"
   ]
 }
