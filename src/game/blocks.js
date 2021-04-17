@@ -11,8 +11,11 @@ export const BLOCK_NAMES = {
   TURN: 'TURN',
   PICK_UP: 'PICK_UP',
   DROP: 'DROP',
+  PRESS_BUTTON: 'PRESS_BUTTON',
   REPEAT: 'REPEAT',
   END_REPEAT: 'END REPEAT',
+  IF_BUTTON_BLUE: 'IF_BUTTON_BLUE',
+  END_IF: 'END_IF',
 };
 
 export const BLOCKS = {
@@ -38,6 +41,9 @@ export const BLOCKS = {
   [BLOCK_NAMES.TAKE_PHOTO]: {
     name: 'Take Photo'
   },
+  [BLOCK_NAMES.PRESS_BUTTON]: {
+    name: 'Press Button'
+  },
   [BLOCK_NAMES.REPEAT]: {
     name: 'Repeat',
     args: [
@@ -46,6 +52,12 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.END_REPEAT]: {
     name: 'End Repeat'
+  },
+  [BLOCK_NAMES.IF_BUTTON_BLUE]: {
+    name: 'If Button is Blue'
+  },
+  [BLOCK_NAMES.END_IF]: {
+    name: 'End If'
   },
 }
 
@@ -92,6 +104,7 @@ export const validate_program = (program) => {
     const instruction = Object.assign({}, program[i]);
     instruction.meta = {id: i};
 
+    let top;
     switch (instruction.block) {
 
       case BLOCK_NAMES.REPEAT:
@@ -104,7 +117,7 @@ export const validate_program = (program) => {
         break;
 
       case BLOCK_NAMES.END_REPEAT:
-        const top = stack.pop();
+        top = stack.pop();
         if (top === undefined) {
           return {isValid: false, error: 'Tenacity can only End Repeat after a matching Repeat instruction.'};
         }
@@ -112,6 +125,21 @@ export const validate_program = (program) => {
           return {isValid: false, error: 'Tenacity tried to End Repeat, but it looks like some other part of the program needs to be resolved first.'};
         }
         instruction.meta.jumpBackTo = top.line;
+        augmentedProgram[top.line].meta.jumpTo = i + 1;
+        break;
+
+      case BLOCK_NAMES.IF_BUTTON_BLUE:
+        stack.push({type: BLOCK_NAMES.IF_BUTTON_BLUE, condition: true, line: i});
+        break;
+
+      case BLOCK_NAMES.END_IF:
+        top = stack.pop();
+        if (top === undefined) {
+          return {isValid: false, error: 'Tenacity can only End If after a matching If instruction.'};
+        }
+        else if (top.condition !== true) {
+          return {isValid: false, error: 'Tenacity tried to End If, but it looks like some other part of the program needs to be resolved first.'};
+        }
         augmentedProgram[top.line].meta.jumpTo = i + 1;
         break;
 
@@ -127,6 +155,9 @@ export const validate_program = (program) => {
   if (top !== undefined) {
     if (top.type === BLOCK_NAMES.REPEAT) {
       return {isValid: false, error: 'Tenacity found a Repeat instruction, but it needs a matching End Repeat instruction so that it knows when to stop repeating.'};
+    }
+    else if (top.condition === true) {
+      return {isValid: false, error: 'Tenacity found an If instruction, but it needs a matching End If instruction so that it knows when the condition ends.'};
     }
     else {
       // TODO: Shouldn't ever come up, but make this error more descriptive just in case.

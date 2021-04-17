@@ -1,4 +1,9 @@
+import button_red_unpressed from '../assets/button_red_unpressed.svg';
+import button_red_pressed from '../assets/button_red_pressed.svg';
+import button_blue_unpressed from '../assets/button_blue_unpressed.svg';
+import button_blue_pressed from '../assets/button_blue_pressed.svg';
 import bridge from '../assets/bridge.svg';
+import lab from '../assets/lab.svg';
 import rocket from '../assets/rocket.svg';
 import rover from '../assets/rover.svg';
 import rover_flipped from '../assets/rover_flipped.svg';
@@ -22,10 +27,25 @@ export const OBJECTS = {
     height: 80,
     width: 80
   },
+  BUTTON_BLUE: {
+    images: [button_blue_unpressed, button_blue_pressed],
+    height: 40,
+    width: 40
+  },
+  BUTTON_RED: {
+    images: [button_red_unpressed, button_red_pressed],
+    height: 40,
+    width: 40
+  },
   ROCKET: {
     images: [rocket],
     height: 100,
     width: 57
+  },
+  LAB: {
+    images: [lab],
+    height: 250,
+    width: 150 
   },
   MERCURY_CRATER: {
     images: [mercury_crater],

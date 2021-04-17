@@ -205,5 +205,46 @@ export const PLANETS = [
         ]
       }
     ]
-  }
+  },
+  {
+    name: 'Earth',
+    introConfig: {
+      size: 21,
+      scale: 1.3,
+      orbitDuration: 47000,
+      textColor: 'black'
+    },
+    colors: {
+      main: '#34bf9a',
+      sky: '#9df2ee',
+      text: 'black'
+    },
+    briefing: 'The Tenacity rover has arrived on Earth. Deliver the photos and rock samples to the lab before proceeding to the next planet.',
+    missions: [
+      {
+        objective: 'Unlock the lab. To unlock the lab, press all of the blue buttons without pressing the red button.',
+        hint: 'Any instructions between an "If" and an "End If" instruction will only run if the "If" condition is true.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 1],
+          [BLOCK_NAMES.PRESS_BUTTON, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+          [BLOCK_NAMES.IF_BUTTON_BLUE, 1],
+          [BLOCK_NAMES.END_IF, 1],
+        ],
+        items: [
+          {...d, id: 'lab', object: OBJECTS.LAB, x: 400},
+          {...d, id: 'button1', object: OBJECTS.BUTTON_BLUE, x: 400, elevation: 70, button: true},
+          {...d, id: 'button2', object: OBJECTS.BUTTON_RED, x: 500, elevation: 70, button: true},
+          {...d, id: 'button3', object: OBJECTS.BUTTON_BLUE, x: 600, elevation: 70, button: true},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
+        ],
+        criteria: [
+          {category: 'button_press', id: 'button1', value: true, message: 'Tenacity did not press all blue buttons.'},
+          {category: 'button_press', id: 'button2', value: false, message: 'Tenacity pressed a red button.'},
+          {category: 'button_press', id: 'button3', value: true, message: 'Tenacity did not press all blue buttons.'},
+        ]
+      },
+    ]
+  },
 ]

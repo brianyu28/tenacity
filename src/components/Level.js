@@ -34,11 +34,13 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     loseMessage: false,
     photographs: [], // x locations of photographs
     bridges: [], // x locations of bridges
+    buttons: [], // ids of buttons that have been pressed
     loopMetadata: {}, // how many times has each loop run so far
     events: [] // events that have taken place
   });
 
-  const { startTime, currentInstruction, instructionsCompleted, items, photographs, bridges, winMessage, loseMessage } = state;
+  const { startTime, currentInstruction, instructionsCompleted, items, photographs,
+          bridges, buttons, winMessage, loseMessage } = state;
 
   // Determine index of rover
   const roverIndex = items.findIndex(item => item.id === 'rover');
@@ -100,6 +102,15 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         }
         return false;
 
+      case 'button_press':
+        // If button is pressed, return true if that was the goal, false otherwise
+        for (const button of buttons) {
+          if (button === criterion.id) {
+            return criterion.value;
+          }
+        }
+        return !criterion.value;
+
       default:
         console.log('Error: Unknown criterion.');
         return false;
@@ -152,6 +163,16 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
   function getCarriedObject() {
     for (const item of items) {
       if (item.carried) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  // Get the button where the rover currently is
+  function getCurrentButton() {
+    for (const item of items) {
+      if (item.button === true && item.x === rover.x) {
         return item;
       }
     }
@@ -303,6 +324,61 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           instructionsCompleted: instruction.meta.jumpBackTo,
           items: roverNoop(state.items),
         }));
+        break;
+
+      case BLOCK_NAMES.IF_BUTTON_BLUE:
+        let blue_button = false;
+        for (const item of items) {
+          if (item.x === rover.x && item.object === OBJECTS.BUTTON_BLUE) {
+            blue_button = true;
+            break;
+          }
+        }
+        if (blue_button) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: roverNoop(state.items),
+          }));
+        } else {
+          setState(state => ({
+            ...state,
+            currentInstruction: instruction.meta.jumpTo - 1,
+            instructionsCompleted: instruction.meta.jumpTo,
+            items: roverNoop(state.items),
+          }));
+        }
+        break;
+
+      case BLOCK_NAMES.END_IF:
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          items: roverNoop(state.items),
+        }));
+        break;
+
+      case BLOCK_NAMES.PRESS_BUTTON:
+        obj = getCurrentButton();
+        if (obj !== null) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            buttons: [...state.buttons, obj.id],
+            items: state.items.map((item, i) => item.id === obj.id ?
+              {
+                ...item,
+                costumeNumber: 1 
+              }
+              : item
+            ),
+          }));
+        } else {
+          setState(state => ({
+            ...state,
+           loseMessage: 'Tenacity tried to press a button that wasn\'t there.'
+          }));
+        }
         break;
 
       case BLOCK_NAMES.TAKE_PHOTO:
