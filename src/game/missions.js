@@ -65,7 +65,7 @@ export const PLANETS = [
         items: [
           {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
           {...d, id: 'crater', object: OBJECTS.MERCURY_CRATER, x: 500, elevation: -30, allowFall: true},
-          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 400, elevation: -30},
+          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 400, elevation: -30, canCarry: true},
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
         ],
         criteria: [
@@ -132,7 +132,7 @@ export const PLANETS = [
         ],
         items: [
           {...d, id: 'crater', object: OBJECTS.VENUS_CRATER, x: 300, allowFall: true, elevation: -30},
-          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 600, elevation: -30},
+          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 600, elevation: -30, canCarry: true},
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
         ],
         criteria: [
@@ -178,9 +178,9 @@ export const PLANETS = [
         ],
         items: [
           {...d, id: 'crater1', object: OBJECTS.VENUS_CRATER, x: 500, allowFall: true, elevation: -30},
-          {...d, id: 'rock1', object: OBJECTS.ROCK_BLUE, x: 600, elevation: -30},
+          {...d, id: 'rock1', object: OBJECTS.ROCK_BLUE, x: 600, elevation: -30, canCarry: true},
           {...d, id: 'crater2', object: OBJECTS.VENUS_CRATER, x: 300, allowFall: true, elevation: -30},
-          {...d, id: 'rock2', object: OBJECTS.ROCK_BLUE, x: 200, elevation: -30},
+          {...d, id: 'rock2', object: OBJECTS.ROCK_BLUE, x: 200, elevation: -30, canCarry: true},
           {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 400},
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
         ],
@@ -245,6 +245,27 @@ export const PLANETS = [
           {category: 'button_press', id: 'button3', value: true, message: 'Tenacity did not press all blue buttons.'},
         ]
       },
+      {
+        objective: 'There is one rock sample in the "Samples" box. Move it to the appropriately labeled color box.',
+        hint: 'Red rocks should go to the "Red" box and blue rocks should go to the "Blue" box.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 5],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.DROP, 1],
+          [BLOCK_NAMES.IF_CARRYING_BLUE, 1],
+          [BLOCK_NAMES.END_IF, 1],
+        ],
+        items: [
+          {...d, id: 'rock', object: OBJECTS.ROCK_BLUE, x: 200, elevation: -50, canCarry: true, color: 'blue'},
+          {...d, id: 'box_samples', object: OBJECTS.BOX_SAMPLES, x: 200, elevation: -100},
+          {...d, id: 'box_red', object: OBJECTS.BOX_RED, x: 400, elevation: -100},
+          {...d, id: 'box_blue', object: OBJECTS.BOX_BLUE, x: 500, elevation: -100},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
+        ],
+        criteria: [
+          {category: 'location_x', id: 'rock', value: 500, message: 'Rock sample did not end up in blue box.'},
+        ]
+      }, 
     ]
   },
 ]

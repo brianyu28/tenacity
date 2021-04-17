@@ -13,6 +13,9 @@ import rock_blue from '../assets/rock_blue.svg';
 import rock_red from '../assets/rock_red.svg';
 import volcano from '../assets/volcano.svg';
 import photograph from '../assets/photograph.svg';
+import box_samples from '../assets/box_samples.svg';
+import box_red from '../assets/box_red.svg';
+import box_blue from '../assets/box_blue.svg';
 
 import { CANVAS_HEIGHT, GROUND_HEIGHT } from './constants';
 
@@ -20,6 +23,21 @@ export const OBJECTS = {
   BRIDGE: {
     images: [bridge],
     height: 13.5,
+    width: 90
+  },
+  BOX_SAMPLES: {
+    images: [box_samples],
+    height: 90,
+    width: 90
+  },
+  BOX_RED: {
+    images: [box_red],
+    height: 90,
+    width: 90
+  },
+  BOX_BLUE: {
+    images: [box_blue],
+    height: 90,
     width: 90
   },
   ROVER: {

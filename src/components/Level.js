@@ -152,7 +152,8 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
   function getPickupObject() {
     let obj = null; 
     for (const item of items) {
-      if (!item.carried && item !== rover && item.x === rover.x && (obj === null || item.elevation > obj.elevation)) {
+      if (!item.carried && item.canCarry &&
+          item !== rover && item.x === rover.x && (obj === null || item.elevation > obj.elevation)) {
         obj = item;
       }
     }
@@ -335,6 +336,24 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           }
         }
         if (blue_button) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: roverNoop(state.items),
+          }));
+        } else {
+          setState(state => ({
+            ...state,
+            currentInstruction: instruction.meta.jumpTo - 1,
+            instructionsCompleted: instruction.meta.jumpTo,
+            items: roverNoop(state.items),
+          }));
+        }
+        break;
+
+      case BLOCK_NAMES.IF_CARRYING_BLUE:
+        obj = getCarriedObject();
+        if (obj && obj.color === 'blue') {
           setState(state => ({
             ...state,
             instructionsCompleted: state.instructionsCompleted + 1,

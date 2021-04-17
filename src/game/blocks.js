@@ -15,6 +15,7 @@ export const BLOCK_NAMES = {
   REPEAT: 'REPEAT',
   END_REPEAT: 'END REPEAT',
   IF_BUTTON_BLUE: 'IF_BUTTON_BLUE',
+  IF_CARRYING_BLUE: 'IF_CARRYING_BLUE',
   END_IF: 'END_IF',
 };
 
@@ -55,6 +56,9 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.IF_BUTTON_BLUE]: {
     name: 'If Button is Blue'
+  },
+  [BLOCK_NAMES.IF_CARRYING_BLUE]: {
+    name: 'If Carrying Blue'
   },
   [BLOCK_NAMES.END_IF]: {
     name: 'End If'
@@ -129,7 +133,8 @@ export const validate_program = (program) => {
         break;
 
       case BLOCK_NAMES.IF_BUTTON_BLUE:
-        stack.push({type: BLOCK_NAMES.IF_BUTTON_BLUE, condition: true, line: i});
+      case BLOCK_NAMES.IF_CARRYING_BLUE:
+        stack.push({type: instruction.block, condition: true, line: i});
         break;
 
       case BLOCK_NAMES.END_IF:
