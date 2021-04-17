@@ -1,4 +1,4 @@
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../game/constants';
+import { CANVAS_WIDTH } from '../game/constants';
 
 const PADDING = 15;
 const CIRCLE_RADIUS = 20;

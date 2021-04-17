@@ -29,6 +29,7 @@ export const PLANETS = [
     missions: [
       {
         objective: 'Navigate Tenacity back to the spacecraft for refueling.',
+        hint: 'Click on a function to add it to Tenacity\'s program. Click "Submit Instructions" when the program is ready to run.',
         blocks: [
           [BLOCK_NAMES.FORWARD, 2]
         ],
@@ -42,7 +43,6 @@ export const PLANETS = [
       },
       {
         objective: 'Get close to the crater to explore it. But be careful not to fall in!',
-        hint: 'You do not always need to use every block available to you.',
         blocks: [
           [BLOCK_NAMES.FORWARD, 5]
         ],
@@ -101,10 +101,11 @@ export const PLANETS = [
       sky: '#dbb78f',
       text: 'black'
     },
-    briefing: 'Welcome to Venus!',
+    briefing: 'Welcome to Venus! Tenacity\'s mission is to explore the volcanos on the planet.',
     missions: [
       {
         objective: 'Get to the base of the volcano and take a photo.',
+        hint: 'To repeat a section of a program multiple times, put it in between a "Repeat" and "End Repeat" instruction.',
         blocks: [
           [BLOCK_NAMES.FORWARD, 1],
           [BLOCK_NAMES.TAKE_PHOTO, 1],
