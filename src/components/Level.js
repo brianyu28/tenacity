@@ -8,6 +8,8 @@ import { BLOCK_NAMES, EVENTS } from '../game/blocks';
 import { PLANETS } from '../game/missions';
 import { OBJECTS, obj_y } from '../game/objects';
 
+const STEP_SIZE = 100;
+
 const AItem = a(Item);
 
 const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, programSubmitted }) => {
@@ -31,12 +33,13 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     winMessage: false,
     loseMessage: false,
     photographs: [], // x locations of photographs
+    bridges: [], // x locations of bridges
     loopMetadata: {}, // how many times has each loop run so far
     events: [] // events that have taken place
   });
 
-  const { startTime, currentInstruction, instructionsCompleted, items, photographs, winMessage, loseMessage } = state;
-  
+  const { startTime, currentInstruction, instructionsCompleted, items, photographs, bridges, winMessage, loseMessage } = state;
+
   // Determine index of rover
   const roverIndex = items.findIndex(item => item.id === 'rover');
   const rover = roverIndex !== -1 ? items[roverIndex] : null;
@@ -47,10 +50,10 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
   function checkWin() {
     for (let i = 0; i < mission.criteria.length; i++) {
       if (!checkCriteria(mission.criteria[i])) {
-        return false;
+        return {isWin: false, message: mission.criteria[i].message || true};
       }
     }
-    return true;
+    return {isWin: true};
   }
 
   // Check if particular criteria is true
@@ -98,6 +101,15 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
 
   // Check to see if item will fall into something that allows falling
   function checkFall(target) {
+    
+    // If there's a bridge at target's x elevation, don't fall
+    for (const bridge of bridges) {
+      if (bridge === target.x) {
+        return false;
+      }
+    }
+
+    // If there's no bridge, check for an item that allows falling
     for (const item of items) {
       if (item.allowFall && item.x === target.x && target.elevation === 0) {
         return true;
@@ -141,7 +153,7 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           instructionsCompleted: state.instructionsCompleted + 1,
           items: state.items.map((item, i) => i === roverIndex || item.carried === true ? {
               ...item,
-              x: rover.costumeNumber === 0 ? item.x + 100 : item.x - 100
+              x: rover.costumeNumber === 0 ? item.x + STEP_SIZE : item.x - STEP_SIZE
             } : item),
         }));
         break;
@@ -247,6 +259,15 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         }));
         break;
 
+      case BLOCK_NAMES.BRIDGE:
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          bridges: [...state.bridges, rover.costumeNumber === 0 ? rover.x + STEP_SIZE : rover.x - STEP_SIZE],
+          items: roverNoop(state.items),
+        }));
+        break;
+
       default:
         console.log('ERROR: Unknown block.');
     }
@@ -323,10 +344,11 @@ const itemSprings = useSprings(items.length, items.map((item, i) => ({
 
     // Check if program is over
     if (i === roverIndex && programSubmitted && state.instructionsCompleted === program.length) {
-      if (checkWin()) {
+      const { isWin, message } = checkWin();
+      if (isWin) {
         setState(state => ({...state, winMessage: true})); 
       } else {
-        setState(state => ({...state, loseMessage: true})); 
+        setState(state => ({...state, loseMessage: message})); 
       }
     }
 
@@ -362,15 +384,30 @@ return (
         />);
       })}
       {
+        bridges.map((x, i) => {
+          const bridge = OBJECTS.BRIDGE;
+          return (<AItem
+            key={i}
+            object={bridge}
+            x={x}
+            y={obj_y(bridge, -bridge.height)}
+            costumeIndex={0}
+            center={true}
+            opacity={1}
+          />);
+        })
+      }
+      {
         photographs.map((x, i) => {
           const photograph = OBJECTS.PHOTOGRAPH;
           return (<AItem
             key={i}
             object={photograph}
-            x={20 + (photograph.width + 10) * i}
+            // x={20 + (photograph.width + 10) * i}
+            x={x}
             y={obj_y(photograph, -80)}
             costumeIndex={0}
-            center={false}
+            center={true}
             opacity={1}
           />);
         })
@@ -394,6 +431,16 @@ return (
         style={{ fontSize: '80px', fill: planet.colors.text }}
       >
         Try Again
+      </a.text>
+      <a.text
+        x='50%'
+        y='35%'
+        dominantBaseline='middle'
+        textAnchor='middle'
+        opacity={loseSpring.opacity}
+        style={{ fontSize: '30px', fill: planet.colors.text }}
+      >
+        {loseMessage === true ? '' : loseMessage}
       </a.text>
     </g>
   );

@@ -80,6 +80,7 @@ button:hover {
 #blocks {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 button.block {

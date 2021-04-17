@@ -5,6 +5,7 @@ export const EVENTS = {
 };
 
 export const BLOCK_NAMES = {
+  BRIDGE: 'BUILD_BRIDGE',
   FORWARD: 'FORWARD',
   TAKE_PHOTO: 'TAKE_PHOTO',
   TURN: 'TURN',
@@ -15,6 +16,9 @@ export const BLOCK_NAMES = {
 
 export const BLOCKS = {
 
+  [BLOCK_NAMES.BRIDGE]: {
+    name: 'Build Bridge'
+  },
   [BLOCK_NAMES.FORWARD]: {
     name: 'Move Forward'
   },

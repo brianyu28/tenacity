@@ -38,7 +38,7 @@ export const PLANETS = [
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
         ],
         criteria: [
-          {category: 'rover_x', value: 500}
+          {category: 'rover_x', value: 500, message: 'Rover did not make it back to spacecraft.'}
         ]
       },
       {
@@ -116,6 +116,24 @@ export const PLANETS = [
           {...d, id: 'volcano', object: OBJECTS.VOLCANO, x: 700},
           {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
           {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
+        ],
+        criteria: [
+          {category: 'photograph', value: 700}
+        ]
+      },
+      {
+        objective: 'Collect the rock sample.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 2],
+          [BLOCK_NAMES.BRIDGE, 1],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+        ],
+        items: [
+          {...d, id: 'crater', object: OBJECTS.VENUS_CRATER, x: 300, allowFall: true, elevation: -30},
+          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 600, elevation: -30},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
         ],
         criteria: [
           {category: 'photograph', value: 700}
