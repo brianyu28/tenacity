@@ -67,6 +67,14 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         }
         return false;
 
+      case 'location_x':
+        for (const item of items) {
+          if (item.id === criterion.id && item.x === criterion.value) {
+            return true;
+          }
+        }
+        return false;
+
       case 'rover_carry':
         for (const item of items) {
           if (item.id === criterion.value && item.carried === true) {
@@ -133,11 +141,21 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
   function getPickupObject() {
     let obj = null; 
     for (const item of items) {
-      if (item !== rover && item.x === rover.x && (obj === null || item.elevation > obj.elevation)) {
+      if (!item.carried && item !== rover && item.x === rover.x && (obj === null || item.elevation > obj.elevation)) {
         obj = item;
       }
     }
     return obj;
+  }
+
+  // Get the object that is currently carried
+  function getCarriedObject() {
+    for (const item of items) {
+      if (item.carried) {
+        return item;
+      }
+    }
+    return null;
   }
 
   // Takes a list of items and returns items with the util value for the rover flipped
@@ -155,6 +173,7 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     const instruction = program[currentInstruction];
 
     // Decide which instruction to use
+    let obj;
     switch (instruction.block) {
 
       // Move the rover forward
@@ -181,20 +200,45 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         break;
 
       case BLOCK_NAMES.PICK_UP:
-        const obj = getPickupObject();
-        if (obj != null) {
+        obj = getPickupObject();
+        if (obj !== null) {
           setState(state => ({
             ...state,
             instructionsCompleted: state.instructionsCompleted + 1,
             items: state.items.map((item, i) => item === obj ? {
               ...obj,
               elevation: 30,
+              prevElevation: obj.elevation,
               carried: true
             } : i === roverIndex ? {
               ...rover,
               util: (rover.util || 0) + 1
             } : item),
           }))
+        } else {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: roverNoop(state.items),
+          }));
+        }
+        break;
+
+      case BLOCK_NAMES.DROP:
+        obj = getCarriedObject();
+        if (obj !== null) {
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: state.items.map((item, i) => item === obj ? {
+              ...obj,
+              elevation: obj.prevElevation,
+              carried: false
+            } : i === roverIndex ? {
+              ...rover,
+              util: (rover.util || 0) + 1,
+            } : item),
+          }));
         } else {
           setState(state => ({
             ...state,

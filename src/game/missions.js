@@ -139,6 +139,56 @@ export const PLANETS = [
           {category: 'rover_carry', value: 'rock', message: 'Tenacity does not have rock sample.'},
         ]
       },
+      {
+        objective: 'Take photos at each of the five volcanos.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 3],
+          [BLOCK_NAMES.TURN, 2],
+          [BLOCK_NAMES.TAKE_PHOTO, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+        ],
+        items: [
+          {...d, id: 'volcano1', object: OBJECTS.VOLCANO, x: 200},
+          {...d, id: 'volcano2', object: OBJECTS.VOLCANO, x: 300},
+          {...d, id: 'volcano3', object: OBJECTS.VOLCANO, x: 400},
+          {...d, id: 'volcano4', object: OBJECTS.VOLCANO, x: 500},
+          {...d, id: 'volcano5', object: OBJECTS.VOLCANO, x: 600},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
+        ],
+        criteria: [
+          {category: 'photograph', value: 200, message: 'Tenacity did not take photograph of all volcano.'},
+          {category: 'photograph', value: 300, message: 'Tenacity did not take photograph of all volcano.'},
+          {category: 'photograph', value: 400, message: 'Tenacity did not take photograph of all volcano.'},
+          {category: 'photograph', value: 500, message: 'Tenacity did not take photograph of all volcano.'},
+          {category: 'photograph', value: 600, message: 'Tenacity did not take photograph of all volcano.'},
+        ]
+      },
+      {
+        objective: 'Drop off both rock samples at the rocket.',
+        hint: 'Tenacity can only hold one object at a time.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 5],
+          [BLOCK_NAMES.TURN, 1],
+          [BLOCK_NAMES.BRIDGE, 1],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.DROP, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+        ],
+        items: [
+          {...d, id: 'crater1', object: OBJECTS.VENUS_CRATER, x: 400, allowFall: true, elevation: -30},
+          {...d, id: 'rock1', object: OBJECTS.ROCK_RED, x: 500, elevation: -30},
+          {...d, id: 'crater2', object: OBJECTS.VENUS_CRATER, x: 200, allowFall: true, elevation: -30},
+          {...d, id: 'rock2', object: OBJECTS.ROCK_RED, x: 100, elevation: -30},
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 300},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 300},
+        ],
+        criteria: [
+          {category: 'location_x', id: 'rock1', value: 300, message: 'Both rock samples were not dropped off at rocket.'},
+          {category: 'location_x', id: 'rock2', value: 300, message: 'Both rock samples were not dropped off at rocket.'},
+        ]
+      },
     ]
   }
 ]

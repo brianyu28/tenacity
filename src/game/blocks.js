@@ -10,6 +10,7 @@ export const BLOCK_NAMES = {
   TAKE_PHOTO: 'TAKE_PHOTO',
   TURN: 'TURN',
   PICK_UP: 'PICK_UP',
+  DROP: 'DROP',
   REPEAT: 'REPEAT',
   END_REPEAT: 'END REPEAT',
 };
@@ -27,6 +28,9 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.PICK_UP]: {
     name: 'Pick Up Object'
+  },
+  [BLOCK_NAMES.DROP]: {
+    name: 'Drop Object'
   },
   [BLOCK_NAMES.LAUNCH_ROCKET]: {
     name: 'Launch Rocket'
