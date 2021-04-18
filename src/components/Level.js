@@ -196,6 +196,7 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
 
     // Decide which instruction to use
     let obj;
+    let instr;
     switch (instruction.block) {
 
       // Move the rover forward
@@ -342,10 +343,11 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
             items: roverNoop(state.items),
           }));
         } else {
+          instr = instruction.meta.elseJump === undefined ? instruction.meta.jumpTo : instruction.meta.elseJump;
           setState(state => ({
             ...state,
-            currentInstruction: instruction.meta.jumpTo - 1,
-            instructionsCompleted: instruction.meta.jumpTo,
+            currentInstruction: instr - 1,
+            instructionsCompleted: instr,
             items: roverNoop(state.items),
           }));
         }
@@ -360,13 +362,24 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
             items: roverNoop(state.items),
           }));
         } else {
+          instr = instruction.meta.elseJump === undefined ? instruction.meta.jumpTo : instruction.meta.elseJump;
           setState(state => ({
             ...state,
-            currentInstruction: instruction.meta.jumpTo - 1,
-            instructionsCompleted: instruction.meta.jumpTo,
+            currentInstruction: instr - 1,
+            instructionsCompleted: instr,
             items: roverNoop(state.items),
           }));
         }
+        break;
+
+      case BLOCK_NAMES.ELSE:
+        instr = instruction.meta.jumpTo;
+        setState(state => ({
+          ...state,
+          currentInstruction: instr - 1,
+          instructionsCompleted: instr,
+          items: roverNoop(state.items),
+        }));
         break;
 
       case BLOCK_NAMES.END_IF:

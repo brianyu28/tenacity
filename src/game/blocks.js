@@ -16,6 +16,7 @@ export const BLOCK_NAMES = {
   END_REPEAT: 'END REPEAT',
   IF_BUTTON_BLUE: 'IF_BUTTON_BLUE',
   IF_CARRYING_BLUE: 'IF_CARRYING_BLUE',
+  ELSE: 'ELSE',
   END_IF: 'END_IF',
 };
 
@@ -59,6 +60,9 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.IF_CARRYING_BLUE]: {
     name: 'If Carrying Blue'
+  },
+  [BLOCK_NAMES.ELSE]: {
+    name: 'Else'
   },
   [BLOCK_NAMES.END_IF]: {
     name: 'End If'
@@ -137,6 +141,22 @@ export const validate_program = (program) => {
         stack.push({type: instruction.block, condition: true, line: i});
         break;
 
+      case BLOCK_NAMES.ELSE:
+        top = stack.pop();
+        if (top === undefined) {
+          return {isValid: false, error: 'Tenacity can only have an Else after a matching If instruction.'};
+        }
+        else if (top.condition !== true) {
+          return {isValid: false, error: 'Tenacity tried to Else, but it looks like some other part of the program needs to be resolved first.'};
+        }
+        else if (augmentedProgram[top.line].meta.elseJump !== undefined) {
+          return {isValid: false, error: 'An If instruction can only have one Else expression.'};
+        }
+        augmentedProgram[top.line].meta.elseIndex = i;
+        augmentedProgram[top.line].meta.elseJump = i + 1;
+        stack.push(top);
+        break;
+
       case BLOCK_NAMES.END_IF:
         top = stack.pop();
         if (top === undefined) {
@@ -146,6 +166,10 @@ export const validate_program = (program) => {
           return {isValid: false, error: 'Tenacity tried to End If, but it looks like some other part of the program needs to be resolved first.'};
         }
         augmentedProgram[top.line].meta.jumpTo = i + 1;
+        const elseIndex = augmentedProgram[top.line].meta.elseIndex;
+        if (elseIndex !== undefined) {
+          augmentedProgram[elseIndex].meta.jumpTo = i + 1;
+        }
         break;
 
       default:

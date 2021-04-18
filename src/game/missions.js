@@ -265,7 +265,69 @@ export const PLANETS = [
         criteria: [
           {category: 'location_x', id: 'rock', value: 500, message: 'Rock sample did not end up in blue box.'},
         ]
+      },
+      {
+        objective: 'There is one rock sample in the "Samples" box. Move it to the appropriately labeled color box.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 5],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.DROP, 1],
+          [BLOCK_NAMES.IF_CARRYING_BLUE, 1],
+          [BLOCK_NAMES.ELSE, 1],
+          [BLOCK_NAMES.END_IF, 1],
+        ],
+        items: [
+          {...d, id: 'rock', object: OBJECTS.ROCK_RED, x: 200, elevation: -50, canCarry: true, color: 'red'},
+          {...d, id: 'box_samples', object: OBJECTS.BOX_SAMPLES, x: 200, elevation: -100},
+          {...d, id: 'box_red', object: OBJECTS.BOX_RED, x: 500, elevation: -100},
+          {...d, id: 'box_blue', object: OBJECTS.BOX_BLUE, x: 400, elevation: -100},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
+        ],
+        criteria: [
+          {category: 'location_x', id: 'rock', value: 500, message: 'Rock sample did not end up in red box.'},
+        ]
+      },
+      {
+        objective: 'There are three rock sample in the "Samples" box. Move each of them to the appropriately labeled color box.',
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 7],
+          [BLOCK_NAMES.TURN, 4],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.DROP, 2],
+          [BLOCK_NAMES.IF_CARRYING_BLUE, 1],
+          [BLOCK_NAMES.ELSE, 1],
+          [BLOCK_NAMES.END_IF, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+        ],
+        items: [
+          {...d, id: 'rock1', object: OBJECTS.ROCK_RED, x: 200, elevation: -50, canCarry: true, color: 'red'},
+          {...d, id: 'rock2', object: OBJECTS.ROCK_BLUE, x: 200, elevation: -51, canCarry: true, color: 'blue'},
+          {...d, id: 'rock3', object: OBJECTS.ROCK_RED, x: 200, elevation: -52, canCarry: true, color: 'red'},
+          {...d, id: 'box_samples', object: OBJECTS.BOX_SAMPLES, x: 200, elevation: -100},
+          {...d, id: 'box_red', object: OBJECTS.BOX_RED, x: 400, elevation: -100},
+          {...d, id: 'box_blue', object: OBJECTS.BOX_BLUE, x: 500, elevation: -100},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
+        ],
+        criteria: [
+          {category: 'location_x', id: 'rock1', value: 400, message: 'Red rock sample did not end up in red box.'},
+          {category: 'location_x', id: 'rock2', value: 500, message: 'Blue rock sample did not end up in blue box.'},
+          {category: 'location_x', id: 'rock3', value: 400, message: 'Red rock sample did not end up in red box.'},
+        ]
       }, 
+      {
+        objective: "We're done here on Earth! Launch the rocket to head to the next planet.",
+        blocks: [
+          [BLOCK_NAMES.LAUNCH_ROCKET, 1]
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 400},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
+        ],
+        criteria: [
+          {category: 'event', value: EVENTS.ROCKET_LAUNCH, message: 'Rocket did not launch.'}
+        ]
+      }
     ]
   },
 ]
