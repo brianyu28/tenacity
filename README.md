@@ -1,14 +1,12 @@
 # Tenacity
 
-![Planets](screenshots/planets.png)
-
 A game based on the principles of computer programming.
 
 **Play the game at <https://tenacity.brianyu.me/>**
 
-## Gameplay
+![Planets](screenshots/planets.png)
 
-![Mercury mission](screenshots/mercury_mission.png)
+## Gameplay
 
 The game follows a rover named Tenacity as it travels across four planets: Mercury, Venus, Earth, and Mars. On each planet, Tenacity needs your help to complete its missions. Program Tenacity by giving it instructions to follow to help it achieve each of its objectives.
 
@@ -28,5 +26,3 @@ Tenacity as part of a project at
 Harvard's Graduate School of Education.
 I would love to hear your thoughts and feedback on the experience: you can reach me at
 <brian@brianyu.me>.
-
-
