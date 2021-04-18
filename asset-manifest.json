@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.cad9a011.chunk.css",
-    "main.js": "/static/js/main.d4214b08.chunk.js",
-    "main.js.map": "/static/js/main.d4214b08.chunk.js.map",
+    "main.js": "/static/js/main.ebeb9e3c.chunk.js",
+    "main.js.map": "/static/js/main.ebeb9e3c.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.37215c28.js",
     "runtime-main.js.map": "/static/js/runtime-main.37215c28.js.map",
     "static/js/2.096e5fee.chunk.js": "/static/js/2.096e5fee.chunk.js",
@@ -23,6 +23,7 @@
     "static/media/button_red_unpressed.86163d0f.svg": "/static/media/button_red_unpressed.86163d0f.svg",
     "static/media/lab.18e56e2e.svg": "/static/media/lab.18e56e2e.svg",
     "static/media/mercury_crater.af0b0b06.svg": "/static/media/mercury_crater.af0b0b06.svg",
+    "static/media/mountain.7dc848e1.svg": "/static/media/mountain.7dc848e1.svg",
     "static/media/photograph.86f8d649.svg": "/static/media/photograph.86f8d649.svg",
     "static/media/rock_blue.2c73d521.svg": "/static/media/rock_blue.2c73d521.svg",
     "static/media/rock_red.31b2b06f.svg": "/static/media/rock_red.31b2b06f.svg",
@@ -35,6 +36,6 @@
     "static/js/runtime-main.37215c28.js",
     "static/js/2.096e5fee.chunk.js",
     "static/css/main.cad9a011.chunk.css",
-    "static/js/main.d4214b08.chunk.js"
+    "static/js/main.ebeb9e3c.chunk.js"
   ]
 }
