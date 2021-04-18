@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.cad9a011.chunk.css",
-    "main.js": "/static/js/main.e155fefe.chunk.js",
-    "main.js.map": "/static/js/main.e155fefe.chunk.js.map",
+    "main.js": "/static/js/main.ddeb983e.chunk.js",
+    "main.js.map": "/static/js/main.ddeb983e.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.37215c28.js",
     "runtime-main.js.map": "/static/js/runtime-main.37215c28.js.map",
     "static/js/2.096e5fee.chunk.js": "/static/js/2.096e5fee.chunk.js",
@@ -13,6 +13,9 @@
     "static/css/main.cad9a011.chunk.css.map": "/static/css/main.cad9a011.chunk.css.map",
     "static/js/2.096e5fee.chunk.js.LICENSE.txt": "/static/js/2.096e5fee.chunk.js.LICENSE.txt",
     "static/media/amerika.421d9361.mp3": "/static/media/amerika.421d9361.mp3",
+    "static/media/box_blue.ee76ee2b.svg": "/static/media/box_blue.ee76ee2b.svg",
+    "static/media/box_red.566ab204.svg": "/static/media/box_red.566ab204.svg",
+    "static/media/box_samples.3014cc1b.svg": "/static/media/box_samples.3014cc1b.svg",
     "static/media/bridge.76f2dfc2.svg": "/static/media/bridge.76f2dfc2.svg",
     "static/media/button_blue_pressed.14541aa3.svg": "/static/media/button_blue_pressed.14541aa3.svg",
     "static/media/button_blue_unpressed.11c1cc6b.svg": "/static/media/button_blue_unpressed.11c1cc6b.svg",
@@ -32,6 +35,6 @@
     "static/js/runtime-main.37215c28.js",
     "static/js/2.096e5fee.chunk.js",
     "static/css/main.cad9a011.chunk.css",
-    "static/js/main.e155fefe.chunk.js"
+    "static/js/main.ddeb983e.chunk.js"
   ]
 }
