@@ -404,6 +404,7 @@ export const PLANETS = [
           [BLOCK_NAMES.END_REPEAT, 1],
         ],
         items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
           {...d, id: 'mountain1', object: OBJECTS.MOUNTAIN, x: 200},
           {...d, id: 'mountain2', object: OBJECTS.MOUNTAIN, x: 400},
           {...d, id: 'mountain3', object: OBJECTS.MOUNTAIN, x: 700},
