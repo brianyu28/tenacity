@@ -366,6 +366,102 @@ export const PLANETS = [
           {category: 'photograph', value: 500, message: 'Tenacity did not take photograph of mountain.'},
         ]
       },
+      {
+        objective: 'Test each mountain for the presence of ice. Set the variable x to the number of mountains where ice was found.',
+        variables: [
+          {name: 'x', value: 0},
+        ],
+        blocks: [
+          [BLOCK_NAMES.FORWARD, 1],
+          [BLOCK_NAMES.INCREMENT_VAR, 2],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+          [BLOCK_NAMES.IF_ICE, 1],
+          [BLOCK_NAMES.END_IF, 1],
+        ],
+        items: [
+          {...d, id: 'mountain1', object: OBJECTS.MOUNTAIN, x: 200, ice: false},
+          {...d, id: 'mountain2', object: OBJECTS.MOUNTAIN, x: 300, ice: true},
+          {...d, id: 'mountain3', object: OBJECTS.MOUNTAIN, x: 400, ice: false},
+          {...d, id: 'mountain4', object: OBJECTS.MOUNTAIN, x: 500, ice: true},
+          {...d, id: 'mountain5', object: OBJECTS.MOUNTAIN, x: 600, ice: false},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
+        ],
+        criteria: [
+          {category: 'variable', id: 'x', value: 2, message: 'Tenacity did not calculate x correctly.'},
+        ]
+      },
+      {
+        objective: 'Take a photograph at the base of each mountain. Don\'t take more photographs than you need.',
+        variables: [
+          {name: 'x', value: 0},
+        ],
+        blocks: [
+          [BLOCK_NAMES.FORWARD_VAR, 1],
+          [BLOCK_NAMES.INCREMENT_VAR, 4],
+          [BLOCK_NAMES.TAKE_PHOTO, 1],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+        ],
+        items: [
+          {...d, id: 'mountain1', object: OBJECTS.MOUNTAIN, x: 200},
+          {...d, id: 'mountain2', object: OBJECTS.MOUNTAIN, x: 400},
+          {...d, id: 'mountain3', object: OBJECTS.MOUNTAIN, x: 700},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
+        ],
+        criteria: [
+          {category: 'photograph', value: 200, message: 'Tenacity did not take a photograph of each mountain.'},
+          {category: 'photograph', value: 400, message: 'Tenacity did not take a photograph of each mountain.'},
+          {category: 'photograph', value: 700, message: 'Tenacity did not take a photograph of each mountain.'},
+          {category: 'max_photographs', value: 3, message: 'Tenacity took too many photographs.'},
+        ]
+      },
+      {
+        objective: 'Bring all of the red rock samples back to the rocket. Do not move the blue rocks.',
+        variables: [
+          {name: 'x', value: 0},
+        ],
+        blocks: [
+          [BLOCK_NAMES.FORWARD_VAR, 5],
+          [BLOCK_NAMES.TURN, 2],
+          [BLOCK_NAMES.PICK_UP, 1],
+          [BLOCK_NAMES.DROP, 1],
+          [BLOCK_NAMES.INCREMENT_VAR, 4],
+          [BLOCK_NAMES.REPEAT, 1],
+          [BLOCK_NAMES.END_REPEAT, 1],
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
+          {...d, id: 'rock1', object: OBJECTS.ROCK_RED, x: 200, elevation: -50, canCarry: true, color: 'red'},
+          {...d, id: 'rock2', object: OBJECTS.ROCK_RED, x: 400, elevation: -50, canCarry: true, color: 'red'},
+          {...d, id: 'rock3', object: OBJECTS.ROCK_RED, x: 600, elevation: -50, canCarry: true, color: 'red'},
+          {...d, id: 'rock4', object: OBJECTS.ROCK_BLUE, x: 300, elevation: -50, canCarry: true, color: 'blue'},
+          {...d, id: 'rock5', object: OBJECTS.ROCK_BLUE, x: 500, elevation: -50, canCarry: true, color: 'blue'},
+          {...d, id: 'rock6', object: OBJECTS.ROCK_BLUE, x: 700, elevation: -50, canCarry: true, color: 'blue'},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 100},
+        ],
+        criteria: [
+          {category: 'location_x', id: 'rock1', value: 100, message: 'Rock samples were not dropped off at rocket.'},
+          {category: 'location_x', id: 'rock2', value: 100, message: 'Rock samples were not dropped off at rocket.'},
+          {category: 'location_x', id: 'rock3', value: 100, message: 'Rock samples were not dropped off at rocket.'},
+          {category: 'location_x', id: 'rock4', value: 300, message: 'A blue rock was moved.'},
+          {category: 'location_x', id: 'rock5', value: 500, message: 'A blue rock was moved.'},
+          {category: 'location_x', id: 'rock6', value: 700, message: 'A blue rock was moved.'},
+        ]
+      },
+      {
+        objective: "We're done here on Mars! Launch the rocket to head home.",
+        blocks: [
+          [BLOCK_NAMES.LAUNCH_ROCKET, 1]
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 400},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 400},
+        ],
+        criteria: [
+          {category: 'event', value: EVENTS.ROCKET_LAUNCH, message: 'Rocket did not launch.'}
+        ]
+      } 
     ]
   },
 ]

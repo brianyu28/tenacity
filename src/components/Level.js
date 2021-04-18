@@ -37,7 +37,7 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     photographs: [], // x locations of photographs
     bridges: [], // x locations of bridges
     buttons: [], // ids of buttons that have been pressed
-    variables: mission.variables.map(variable => ({...variable})), // values for variables
+    variables: (mission.variables || []).map(variable => ({...variable})), // values for variables
     loopMetadata: {}, // how many times has each loop run so far
     events: [] // events that have taken place
   });
@@ -105,6 +105,9 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
         }
         return false;
 
+      case 'max_photographs':
+        return photographs.length <= criterion.value;
+
       case 'button_press':
         // If button is pressed, return true if that was the goal, false otherwise
         for (const button of buttons) {
@@ -113,6 +116,14 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           }
         }
         return !criterion.value;
+
+      case 'variable':
+        for (const variable of variables) {
+          if (variable.name === criterion.id && variable.value === criterion.value) {
+            return true;
+          }
+        }
+        return false;
 
       default:
         console.log('Error: Unknown criterion.');
@@ -395,6 +406,31 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
           }));
         }
         break;
+
+        case BLOCK_NAMES.IF_ICE:
+          let ice_detected = false;
+          for (const item of items) {
+            if (item.x === rover.x && item.ice === true) {
+              ice_detected = true;
+              break;
+            }
+          }
+          if (ice_detected) {
+            setState(state => ({
+              ...state,
+              instructionsCompleted: state.instructionsCompleted + 1,
+              items: roverNoop(state.items),
+            }));
+          } else {
+            instr = instruction.meta.elseJump === undefined ? instruction.meta.jumpTo : instruction.meta.elseJump;
+            setState(state => ({
+              ...state,
+              currentInstruction: instr - 1,
+              instructionsCompleted: instr,
+              items: roverNoop(state.items),
+            }));
+          }
+          break;
 
       case BLOCK_NAMES.ELSE:
         instr = instruction.meta.jumpTo;

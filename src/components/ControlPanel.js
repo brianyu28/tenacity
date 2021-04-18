@@ -13,6 +13,14 @@ const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
       const args = {};
       if (block.args !== undefined) {
         for (const arg of block.args) {
+
+          // TEMP: Since right now, the only variable is `x`, automatically set variable to x.
+          // If we ever supported multiple variables, this will need to be removed.
+          if (arg.key === 'var') {
+            args[arg.key] = 'x';
+            continue;
+          }
+
           args[arg.key] = window.prompt(arg.text);
           if (args[arg.key] === null) {
             return;

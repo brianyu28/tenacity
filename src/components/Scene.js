@@ -3,7 +3,7 @@ import { useSpring, animated as a } from 'react-spring';
 
 import ControlPanel from './ControlPanel';
 import GameIntro from './GameIntro';
-import GameWIP from './GameWIP';
+import GameOver from './GameOver';
 import Ground from './Ground';
 import PlanetIntro from './PlanetIntro';
 import ProgressIndicator from './ProgressIndicator';
@@ -246,9 +246,9 @@ const Scene = (props) => {
   const levelInProgress = planetIntroStatus === PLANET_INTRO_STATUS.COMPLETE;
   const showControlPanel = levelInProgress && briefingShown;
 
-  // Temporary game over screen
+  // Game over screen
   if (done) {
-    return <GameWIP />;
+    return <GameOver />;
   }
 
   return (

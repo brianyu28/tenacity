@@ -19,6 +19,7 @@ export const BLOCK_NAMES = {
   END_REPEAT: 'END REPEAT',
   IF_BUTTON_BLUE: 'IF_BUTTON_BLUE',
   IF_CARRYING_BLUE: 'IF_CARRYING_BLUE',
+  IF_ICE: 'IF_ICE',
   ELSE: 'ELSE',
   END_IF: 'END_IF',
 };
@@ -31,18 +32,23 @@ export const BLOCKS = {
   [BLOCK_NAMES.FORWARD]: {
     name: 'Move Forward'
   },
+
+  // TEMP: These two blocks are hard-coded to use the variable `x`.
+  // The program technically supports multiple variables, but not currently in use.
+  // If they're ever put into use, replace these `x`s in the `name` with the more generic "Variable"
   [BLOCK_NAMES.FORWARD_VAR]: {
-    name: 'Move Variable Steps',
+    name: 'Move x Steps',
     args: [
       {'key': 'var', 'text': 'Variable name?'}
     ]
   },
   [BLOCK_NAMES.INCREMENT_VAR]: {
-    name: 'Increase Variable by 1',
+    name: 'Increase x by 1',
     args: [
       {'key': 'var', 'text': 'Variable name?'}
     ]
   },
+
   [BLOCK_NAMES.TURN]: {
     name: 'Turn Around'
   },
@@ -75,6 +81,9 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.IF_CARRYING_BLUE]: {
     name: 'If Carrying Blue'
+  },
+  [BLOCK_NAMES.IF_ICE]: {
+    name: 'If Ice Detected'
   },
   [BLOCK_NAMES.ELSE]: {
     name: 'Else'
@@ -110,7 +119,7 @@ export const instruction_label = ({ block, args }) => {
       return `${name} ${args.count}`;
 
     case BLOCK_NAMES.FORWARD_VAR:
-      return `Move ${args.var} steps`;
+      return `Move ${args.var} Steps`;
 
     case BLOCK_NAMES.INCREMENT_VAR:
       return `Increase ${args.var} by 1`;
@@ -171,6 +180,7 @@ export const validate_program = (program, variables) => {
 
       case BLOCK_NAMES.IF_BUTTON_BLUE:
       case BLOCK_NAMES.IF_CARRYING_BLUE:
+      case BLOCK_NAMES.IF_ICE:
         stack.push({type: instruction.block, condition: true, line: i});
         break;
 
