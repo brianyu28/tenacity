@@ -233,6 +233,7 @@ export const PLANETS = [
           [BLOCK_NAMES.END_IF, 1],
         ],
         items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
           {...d, id: 'lab', object: OBJECTS.LAB, x: 400},
           {...d, id: 'button1', object: OBJECTS.BUTTON_BLUE, x: 400, elevation: 70, button: true},
           {...d, id: 'button2', object: OBJECTS.BUTTON_RED, x: 500, elevation: 70, button: true},
@@ -288,7 +289,7 @@ export const PLANETS = [
         ]
       },
       {
-        objective: 'There are three rock sample in the "Samples" box. Move each of them to the appropriately labeled color box.',
+        objective: 'There are three rock samples in the "Samples" box. Move each of them to the appropriately labeled color box.',
         blocks: [
           [BLOCK_NAMES.FORWARD, 7],
           [BLOCK_NAMES.TURN, 4],
@@ -328,6 +329,43 @@ export const PLANETS = [
           {category: 'event', value: EVENTS.ROCKET_LAUNCH, message: 'Rocket did not launch.'}
         ]
       }
+    ]
+  },
+  {
+    name: 'Mars',
+    introConfig: {
+      size: 11,
+      scale: 1,
+      orbitDuration: 88000,
+      textColor: 'black'
+    },
+    colors: {
+      main: '#942c25',
+      sky: '#e67870',
+      text: 'black'
+    },
+    briefing: 'The Tenacity rover has arrived on Mars, the last planet on this journey.',
+    missions: [
+      {
+        objective: 'Take a photograph at the base of the mountain.',
+        hint: 'Tenacity store data in variables, found in the upper right. Some instructions let you type the name of a variable to control how the instruction behaves.',
+        variables: [
+          {name: 'x', value: 0},
+        ],
+        blocks: [
+          [BLOCK_NAMES.FORWARD_VAR, 1],
+          [BLOCK_NAMES.INCREMENT_VAR, 4],
+          [BLOCK_NAMES.TAKE_PHOTO, 1],
+        ],
+        items: [
+          {...d, id: 'rocket', object: OBJECTS.ROCKET, x: 100},
+          {...d, id: 'mountain', object: OBJECTS.MOUNTAIN, x: 500},
+          {...d, id: 'rover', object: OBJECTS.ROVER, x: 200},
+        ],
+        criteria: [
+          {category: 'photograph', value: 500, message: 'Tenacity did not take photograph of mountain.'},
+        ]
+      },
     ]
   },
 ]

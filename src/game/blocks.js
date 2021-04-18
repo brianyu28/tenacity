@@ -7,8 +7,11 @@ export const EVENTS = {
 export const BLOCK_NAMES = {
   BRIDGE: 'BUILD_BRIDGE',
   FORWARD: 'FORWARD',
+  FORWARD_VAR: 'FORWARD_VAR',
+  INCREMENT_VAR: 'INCREMENT_VAR',
   TAKE_PHOTO: 'TAKE_PHOTO',
   TURN: 'TURN',
+  LAUNCH_ROCKET: 'LAUNCH_ROCKET',
   PICK_UP: 'PICK_UP',
   DROP: 'DROP',
   PRESS_BUTTON: 'PRESS_BUTTON',
@@ -27,6 +30,18 @@ export const BLOCKS = {
   },
   [BLOCK_NAMES.FORWARD]: {
     name: 'Move Forward'
+  },
+  [BLOCK_NAMES.FORWARD_VAR]: {
+    name: 'Move Variable Steps',
+    args: [
+      {'key': 'var', 'text': 'Variable name?'}
+    ]
+  },
+  [BLOCK_NAMES.INCREMENT_VAR]: {
+    name: 'Increase Variable by 1',
+    args: [
+      {'key': 'var', 'text': 'Variable name?'}
+    ]
   },
   [BLOCK_NAMES.TURN]: {
     name: 'Turn Around'
@@ -94,6 +109,12 @@ export const instruction_label = ({ block, args }) => {
     case BLOCK_NAMES.REPEAT:
       return `${name} ${args.count}`;
 
+    case BLOCK_NAMES.FORWARD_VAR:
+      return `Move ${args.var} steps`;
+
+    case BLOCK_NAMES.INCREMENT_VAR:
+      return `Increase ${args.var} by 1`;
+
     default:
       return name;
   }
@@ -103,7 +124,7 @@ export const instruction_label = ({ block, args }) => {
 // e.g. ensure all repeat blocks have an 'end repeat'
 // This function also adds metadata to block that's useful for execution
 // e.g. for 'end' blocks, keep tracks of where the jump back to should be
-export const validate_program = (program) => {
+export const validate_program = (program, variables) => {
   const augmentedProgram = [];
   const stack = [];
   for (let i = 0; i < program.length; i++) {
@@ -111,6 +132,18 @@ export const validate_program = (program) => {
     // Make a copy of the instruction before mutation
     const instruction = Object.assign({}, program[i]);
     instruction.meta = {id: i};
+
+    if (instruction.args.var !== undefined) {
+      let found = false;
+      for (const variable of variables) {
+        if (variable.name === instruction.args.var) {
+          found = true;
+        }
+      }
+      if (!found) {
+        return {isValid: false, error: `Tenacity does not have a variable called ${instruction.args.var}`};
+      }
+    }
 
     let top;
     switch (instruction.block) {

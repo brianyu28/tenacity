@@ -3,12 +3,14 @@ import { useSpring, useSprings, animated as a } from 'react-spring';
 
 import Item from './Item';
 
+import { CANVAS_WIDTH } from '../game/constants';
 import { getMissionLabel, logEvent } from '../analytics';
 import { BLOCK_NAMES, EVENTS } from '../game/blocks';
 import { PLANETS } from '../game/missions';
 import { OBJECTS, obj_y } from '../game/objects';
 
 const STEP_SIZE = 100;
+const PADDING = 20;
 
 const AItem = a(Item);
 
@@ -35,12 +37,13 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     photographs: [], // x locations of photographs
     bridges: [], // x locations of bridges
     buttons: [], // ids of buttons that have been pressed
+    variables: mission.variables.map(variable => ({...variable})), // values for variables
     loopMetadata: {}, // how many times has each loop run so far
     events: [] // events that have taken place
   });
 
   const { startTime, currentInstruction, instructionsCompleted, items, photographs,
-          bridges, buttons, winMessage, loseMessage } = state;
+          bridges, buttons, variables, winMessage, loseMessage } = state;
 
   // Determine index of rover
   const roverIndex = items.findIndex(item => item.id === 'rover');
@@ -180,6 +183,15 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
     return null;
   }
 
+  function getVariableValue(name) {
+    for (const variable of variables) {
+      if (variable.name === name) {
+        return variable.value;
+      }
+    }
+    return null;
+  }
+
   // Takes a list of items and returns items with the util value for the rover flipped
   // Doesn't functionally change anything about the items, but triggers an animation
   function roverNoop(items) {
@@ -210,6 +222,18 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
             } : item),
         }));
         break;
+
+        case BLOCK_NAMES.FORWARD_VAR:
+          let amt = getVariableValue(instruction.args.var);
+          setState(state => ({
+            ...state,
+            instructionsCompleted: state.instructionsCompleted + 1,
+            items: state.items.map((item, i) => i === roverIndex || item.carried === true ? {
+                ...item,
+                x: rover.costumeNumber === 0 ? item.x + amt * STEP_SIZE : item.x - amt * STEP_SIZE
+              } : item),
+          }));
+          break;
 
       case BLOCK_NAMES.TURN:
         setState(state => ({
@@ -437,7 +461,22 @@ const Level = ({ planetIndex, missionIndex, onSuccess, onFailure, program, progr
            loseMessage: 'Tenacity can only build bridges over craters.'
           }));
         }
-        
+        break;
+
+      case BLOCK_NAMES.INCREMENT_VAR:
+        setState(state => ({
+          ...state,
+          instructionsCompleted: state.instructionsCompleted + 1,
+          variables: state.variables.map((variable) => (
+            variable.name === instruction.args.var ?
+            {
+              ...variable,
+              value: variable.value + 1
+            }
+            : variable
+          )),
+          items: roverNoop(state.items),
+        }));
         break;
 
       default:
@@ -575,13 +614,26 @@ return (
           return (<AItem
             key={i}
             object={photograph}
-            // x={20 + (photograph.width + 10) * i}
             x={x}
             y={obj_y(photograph, -80)}
             costumeIndex={0}
             center={true}
             opacity={1}
           />);
+        })
+      }
+      {
+        variables.map((variable, i) => {
+          return (<text
+            key={i}
+            textAnchor='end'
+            dominantBaseline='hanging'
+            x={CANVAS_WIDTH - PADDING}
+            y={PADDING + (24) * (i + 1)}
+            style={{ fill: planet.colors.text, fontSize: '20px', fontFamily: 'monospace' }}
+          >
+            {variable.name}: {variable.value}
+          </text>)
         })
       }
       <a.text

@@ -284,6 +284,7 @@ const Scene = (props) => {
           missionIndex={missionIndex}
           addToProgram={addToProgram}
           blocks={remaining_blocks(mission.blocks, program)}
+          variables={mission.variables || []}
           onResetProgram={() => act(ACTION.RESET_PROGRAM)}
           onSubmitProgram={(augmentedProgram) => act(ACTION.SUBMIT_PROGRAM, augmentedProgram)}
           program={program}

@@ -2,7 +2,7 @@ import { BLOCKS, instruction_label, validate_program } from '../game/blocks';
 import { getMissionLabel, logEvent } from '../analytics';
 
 const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
-                  program, programSubmitted, planetIndex, missionIndex }) => {
+                  program, programSubmitted, planetIndex, missionIndex, variables }) => {
 
   function blockClicked(blockId) {
     if (!programSubmitted) {
@@ -25,7 +25,7 @@ const ControlPanel = ({ addToProgram, blocks, onResetProgram, onSubmitProgram,
 
   function submitProgram() {
 
-    const { isValid, augmentedProgram, error } = validate_program(program);
+    const { isValid, augmentedProgram, error } = validate_program(program, variables);
 
     // Don't allow submission of an invalid program
     if (!isValid) {

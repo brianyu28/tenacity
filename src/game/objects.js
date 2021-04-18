@@ -12,6 +12,7 @@ import venus_crater from '../assets/mercury_crater.svg';
 import rock_blue from '../assets/rock_blue.svg';
 import rock_red from '../assets/rock_red.svg';
 import volcano from '../assets/volcano.svg';
+import mountain from '../assets/mountain.svg';
 import photograph from '../assets/photograph.svg';
 import box_samples from '../assets/box_samples.svg';
 import box_red from '../assets/box_red.svg';
@@ -87,6 +88,11 @@ export const OBJECTS = {
   },
   VOLCANO: {
     images: [volcano],
+    height: 100,
+    width: 100,
+  },
+  MOUNTAIN: {
+    images: [mountain],
     height: 100,
     width: 100,
   },
