@@ -219,7 +219,7 @@ export const PLANETS = [
       sky: '#9df2ee',
       text: 'black'
     },
-    briefing: 'The Tenacity rover has arrived on Earth. Deliver the photos and rock samples to the lab before proceeding to the next planet.',
+    briefing: 'The Tenacity rover has arrived on Earth. Deliver the rock samples to the lab before proceeding to the next planet.',
     missions: [
       {
         objective: 'Unlock the lab. To unlock the lab, press all of the blue buttons without pressing the red button.',
