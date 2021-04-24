@@ -19,6 +19,15 @@ Each planet is focused on one new computational thinking principle.
 * On **Earth**, players are introduced to **conditions**.
 * On **Mars**, players are introduced to **variables**.
 
+## Credits
+
+* Music by [Audiobinger](https://freemusicarchive.org/music/Audiobinger/quarantine-beats-vol-2/amerika).
+* Rocket graphic originally from [FreeSVG](https://freesvg.org/cartoon-moon-rocket-vector-clip-art).
+* Rover graphic originally from [SVG Repo](https://www.svgrepo.com/svg/43211/moon-rover).
+* Rock graphic originally from [FreeSVG](https://freesvg.org/ilmenskie-rock-dull-bg2).
+* Volcano graphic originally from [FreeSVG](https://freesvg.org/volcano-colour).
+* Game mechanics inspired by [this Scratch project](https://scratch.mit.edu/projects/456279794/).
+
 ## Contact
 
 I'm [Brian Yu](https://brianyu.me/), and I developed
