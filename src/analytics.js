@@ -1,10 +1,10 @@
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 import { PLANETS } from './game/missions.js';
 
-ReactGA.initialize('UA-123778931-5');
+ReactGA.initialize('G-SBZELV63L8');
 
-const logAnalytics = process.env.NODE_ENV != 'development';
+const logAnalytics = true || (process.env.NODE_ENV != 'development');
 
 export const getMissionLabel = (planetIndex, missionIndex) => {
   return `${PLANETS[planetIndex].name}, Mission ${missionIndex + 1}`;
@@ -12,7 +12,10 @@ export const getMissionLabel = (planetIndex, missionIndex) => {
 
 export const logPageview = () => {
   if (logAnalytics) {
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    ReactGA.send({
+      hitType: 'pageview',
+      page: window.location.pathname + window.location.search
+    });
   }
 }
 
