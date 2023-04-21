@@ -4,7 +4,7 @@ import { PLANETS } from './game/missions.js';
 
 ReactGA.initialize('G-SBZELV63L8');
 
-const logAnalytics = true || (process.env.NODE_ENV != 'development');
+const logAnalytics = process.env.NODE_ENV != 'development';
 
 export const getMissionLabel = (planetIndex, missionIndex) => {
   return `${PLANETS[planetIndex].name}, Mission ${missionIndex + 1}`;
